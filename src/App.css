@@ -1,0 +1,50 @@
+.App {
+  font-family: Arial, sans-serif;
+  padding: 20px;
+}
+
+/* Basic styles */
+.editor-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.quill-editor {
+  width: 210mm; /* A4 width in mm */
+  height: 297mm; /* A4 height in mm */
+  border: 1px solid #ccc;
+  padding: 20px;
+  box-sizing: border-box;
+  background-color: #fff;
+  margin-bottom: 20px;
+  overflow-y: auto;
+  font-size: 14px;
+  line-height: 1.5;
+  font-family: Arial, sans-serif;
+  display: flex;
+  flex-direction: column;
+}
+
+button.save-btn {
+  background-color: #4CAF50;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+button.save-btn:hover {
+  background-color: #45a049;
+}
+
+
+.inputbox {
+  width: 100%; /* Full width of its container */
+  box-sizing: border-box; /* Include padding and border in the width */
+  padding: 8px; /* Adjust as needed */
+  font-size: 16px; /* Ensure it matches the canvas font */
+}
