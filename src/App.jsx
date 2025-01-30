@@ -5,13 +5,19 @@ import Editor from './components/Editor'
 import QuillEditor from './components/QuillEditor'
 import TinyMCEEditor from './components/TinyMCEEditor'
 import SlateEditor from './components/SlateEditor'
+import { Route, Routes } from 'react-router-dom'
+import WordEditor from './components/WordEditor'
 
 function App() {
 
 
   return (
     <>
-    <Editor  />
+    <Routes>
+      <Route path='/' element={<Editor />} />
+      <Route path='/word' element={<WordEditor />} />
+    </Routes>
+
     </>
   )
 }
