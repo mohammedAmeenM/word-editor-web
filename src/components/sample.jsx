@@ -2,86 +2,46 @@ import React, { useState, useRef, useEffect } from "react";
 import { FaBars, FaChevronDown, FaChevronUp, FaTrash } from "react-icons/fa";
 
 const Editor = () => {
-  // Load initial state from localStorage, or default to empty if not available
-  const loadScenesFromLocalStorage = () => {
-    const storedScenes = localStorage.getItem('scenes');
-    return storedScenes ? JSON.parse(storedScenes) : [{
+  const [scenes, setScenes] = useState([
+    {
       id: 1,
       title: "EXT. SOMEWHERE - DAY",
       lines: ["Click here to type your scene content..."],
-      characters: [],
-      isExpanded: true,
-    }];
-  };
-
-  const [scenes, setScenes] = useState(loadScenesFromLocalStorage);
-  const [characters, setCharacters] = useState([]); // Can also store characters in localStorage if needed
+      characters: [], // Changed to store characters per scene
+      isExpanded: true, // Add toggle state for each scene
+    },
+  ]);
+  const [characters, setCharacters] = useState([]); // State to hold the character names
   const inputRefs = useRef({});
 
-  const [selectedButton, setSelectedButton] = useState("Description");
+  const [selectedButton, setSelectedButton] = useState("Description"); // Set initial selection
 
   // Auto-select Description button and focus on first line when component mounts
   useEffect(() => {
-    // Retrieve the selected button from localStorage (if available)
-    const savedButton = localStorage.getItem('selectedButton');
-    if (savedButton) {
-      setSelectedButton(savedButton); // Update the state to the saved button
-  
-      const firstSceneIndex = 0;
-      const lastLineIndex = scenes[firstSceneIndex].lines.length - 1;
-      const lastInput = inputRefs.current[`scene-${firstSceneIndex}-line-${lastLineIndex}`];
-  
-      if (lastInput) {
-        // Reapply styles based on the selected button
-        switch (savedButton) {
-          case "Description":
-            lastInput.style.textAlign = "left";
-            lastInput.style.paddingLeft = "2%";
-            break;
-          case "Characters":
-            lastInput.style.textAlign = "center";
-            lastInput.style.paddingLeft = "0%";
-            break;
-          case "Dailog":
-            lastInput.style.textAlign = "left";
-            lastInput.style.paddingLeft = "25%";
-            break;
-          default:
-            break;
-        }
-      }
-    }
-  
-    // Focus on the first input line (if available) after the component mounts
     const firstInput = inputRefs.current[`scene-0-line-0`];
     if (firstInput) {
       firstInput.focus();
       firstInput.style.textAlign = "left";
       firstInput.style.paddingLeft = "2%";
     }
-  }, []);  // Empty dependency array ensures this runs only once after the component mounts
-  
-
-  // Save scenes to localStorage whenever it changes
-  useEffect(() => {
-    localStorage.setItem('scenes', JSON.stringify(scenes));
-  }, [scenes]);
+  }, []);
 
   const addNewScene = () => {
-    setSelectedButton("Description");
+    setSelectedButton("Description")
     const newScene = {
       id: scenes.length + 1,
       title: "EXT. NEW SCENE - DAY",
       lines: ["Click here to type your scene content..."],
-      characters: [],
+      characters: [], // Initialize empty characters array for new scene
       isExpanded: true,
     };
     setScenes([...scenes, newScene]);
   };
 
   const deleteScene = (sceneIndex) => {
-    if (scenes.length > 1) {
+    if (scenes.length > 1) { // Prevent deleting the last scene
       const updatedScenes = scenes.filter((_, index) => index !== sceneIndex);
+      // Update IDs to maintain sequence
       const reorderedScenes = updatedScenes.map((scene, index) => ({
         ...scene,
         id: index + 1
@@ -91,16 +51,18 @@ const Editor = () => {
   };
 
   const toggleSceneExpansion = (sceneIndex) => {
-    setScenes(scenes.map((scene, index) =>
-      index === sceneIndex ? { ...scene, isExpanded: !scene.isExpanded } : scene
+    setScenes(scenes.map((scene, index) => 
+      index === sceneIndex 
+        ? { ...scene, isExpanded: !scene.isExpanded }
+        : scene
     ));
   };
 
   const addCharacter = (sceneIndex, text) => {
     if (text.trim()) {
-      setScenes(prevScenes =>
-        prevScenes.map((scene, index) =>
-          index === sceneIndex
+      setScenes(prevScenes => 
+        prevScenes.map((scene, index) => 
+          index === sceneIndex 
             ? { ...scene, characters: [...scene.characters, text.trim()] }
             : scene
         )
@@ -109,10 +71,10 @@ const Editor = () => {
   };
 
   const removeCharacter = (sceneIndex, charIndex) => {
-    setScenes(scenes.map((scene, index) =>
-      index === sceneIndex
-        ? {
-            ...scene,
+    setScenes(scenes.map((scene, index) => 
+      index === sceneIndex 
+        ? { 
+            ...scene, 
             characters: scene.characters.filter((_, i) => i !== charIndex)
           }
         : scene
@@ -121,16 +83,12 @@ const Editor = () => {
 
   const handleButtonClick = (buttonName) => {
     setSelectedButton(buttonName);
-  
-    // Save the selected button in localStorage
-    localStorage.setItem('selectedButton', buttonName);
-  
+    
     const firstSceneIndex = 0;
     const lastLineIndex = scenes[firstSceneIndex].lines.length - 1;
     const lastInput = inputRefs.current[`scene-${firstSceneIndex}-line-${lastLineIndex}`];
-  
+
     if (lastInput) {
-      // Apply styles based on the selected button
       switch (buttonName) {
         case "Description":
           lastInput.style.textAlign = "left";
@@ -144,14 +102,12 @@ const Editor = () => {
           lastInput.style.textAlign = "left";
           lastInput.style.paddingLeft = "25%";
           break;
-        default:
-          break;
       }
       lastInput.focus();
     }
   };
-  
-  
+
+ 
 
   const handleKeyDown = (event, sceneIndex, lineIndex) => {
     const scene = scenes[sceneIndex];
@@ -162,11 +118,13 @@ const Editor = () => {
 
       if (selectedButton === "Characters" && input.value.trim()) {
         addCharacter(sceneIndex, input.value);
-
+  
+        // Reset input after adding character
         input.value = "";
-
+  
         setSelectedButton("Dailog");
-
+  
+        // Add a new line after the character name
         setScenes(prevScenes => {
           const updatedScenes = [...prevScenes];
           const updatedLines = [...updatedScenes[sceneIndex].lines];
@@ -174,7 +132,7 @@ const Editor = () => {
           updatedScenes[sceneIndex] = { ...updatedScenes[sceneIndex], lines: updatedLines };
           return updatedScenes;
         });
-
+  
         setTimeout(() => {
           const nextInput = inputRefs.current[`scene-${sceneIndex}-line-${lineIndex + 1}`];
           if (nextInput) {
@@ -186,8 +144,11 @@ const Editor = () => {
         return;
       }
       if (selectedButton === "Dailog" && input.value.trim()) {
+        // Add character and switch to Dialog mode
+       
         setSelectedButton("Characters");
-
+        
+        // Create new line and set dialog formatting
         const updatedLines = [...scene.lines];
         updatedLines.splice(lineIndex + 1, 0, "");
         updateSceneLines(sceneIndex, updatedLines);
@@ -203,6 +164,7 @@ const Editor = () => {
         return;
       }
 
+      // Normal Enter behavior
       const updatedLines = [...scene.lines];
       const currentLine = updatedLines[lineIndex];
       const cursorPosition = input.selectionStart;
@@ -217,6 +179,7 @@ const Editor = () => {
         const nextInput = inputRefs.current[`scene-${sceneIndex}-line-${lineIndex + 1}`];
         if (nextInput) {
           nextInput.focus();
+          // Maintain current formatting
           nextInput.style.textAlign = input.style.textAlign;
           nextInput.style.paddingLeft = input.style.paddingLeft;
         }
@@ -228,7 +191,7 @@ const Editor = () => {
         input.style.textAlign = "center";
         input.style.paddingLeft = "0%";
       }
-    } else if (event.key === "Backspace" && scene.lines[lineIndex] === "") {
+    }else if (event.key === "Backspace" && scene.lines[lineIndex] === "") {
       event.preventDefault();
       if (lineIndex > 0) {
         const updatedLines = [...scene.lines];
@@ -273,39 +236,57 @@ const Editor = () => {
     const input = event.target;
     const scene = scenes[sceneIndex];
     const updatedLines = [...scene.lines];
-
+  
+    // Measure text width
     const canvas = document.createElement("canvas");
     const context = canvas.getContext("2d");
     const computedStyle = window.getComputedStyle(input);
     const font = `${computedStyle.fontSize} ${computedStyle.fontFamily}`;
     context.font = font;
     const textWidth = context.measureText(value).width;
-
+  
+    // If the text width exceeds the input width
     if (textWidth > input.offsetWidth) {
       const lastSpaceIndex = value.lastIndexOf(" ");
-
+  
       if (lastSpaceIndex !== -1) {
+        // Split at the last space
         const currentLine = value.substring(0, lastSpaceIndex);
         const newLine = value.substring(lastSpaceIndex + 1);
-
+  
         updatedLines[lineIndex] = currentLine;
         updatedLines.splice(lineIndex + 1, 0, newLine);
       } else {
+        // If no space found, just move the overflow text to a new line
         updatedLines[lineIndex] = value;
         updatedLines.splice(lineIndex + 1, 0, "");
       }
-
+  
       updateSceneLines(sceneIndex, updatedLines);
-
+  
       setTimeout(() => {
         const nextInput =
           inputRefs.current[`scene-${sceneIndex}-line-${lineIndex + 1}`];
         nextInput && nextInput.focus();
       }, 0);
     } else {
+      // Update the line normally if it fits
       updatedLines[lineIndex] = value;
       updateSceneLines(sceneIndex, updatedLines);
     }
+  };
+
+  const addNewLine = (sceneIndex, lineIndex) => {
+    const scene = scenes[sceneIndex];
+    const updatedLines = [...scene.lines];
+    updatedLines.splice(lineIndex + 1, 0, "");
+    updateSceneLines(sceneIndex, updatedLines);
+
+    setTimeout(() => {
+      const nextInput =
+        inputRefs.current[`scene-${sceneIndex}-line-${lineIndex + 1}`];
+      nextInput && nextInput.focus();
+    }, 0);
   };
 
   const updateSceneLines = (sceneIndex, updatedLines) => {
@@ -319,61 +300,63 @@ const Editor = () => {
 
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col items-center ">
-      <div className="w-full flex justify-center pt-5 gap-3 mb-4 px-6">
-        <button
-          className={`border border-black rounded-lg px-4 py-2 ${
-            selectedButton === "Add Scene"
-              ? "bg-black text-white"
-              : "bg-white text-black"
-          }`}
-          onClick={() => {
-            addNewScene();
-          }}
-        >
-          Add Scene
-        </button>
-        <button
-          className={`border border-black rounded-lg px-4 py-2 ${
-            selectedButton === "Description"
-              ? "bg-black text-white"
-              : "bg-white text-black"
-          }`}
-          onClick={() => handleButtonClick("Description")}
-        >
-          Description
-        </button>
-        <button
-          className={`border border-black rounded-lg px-4 py-2 ${
-            selectedButton === "Characters"
-              ? "bg-black text-white"
-              : "bg-white text-black"
-          }`}
-          onClick={() => handleButtonClick("Characters")}
-        >
-          Characters
-        </button>
-        <button
-          className={`border border-black rounded-lg px-4 py-2 ${
-            selectedButton === "Dailog"
-              ? "bg-black text-white"
-              : "bg-white text-black"
-          }`}
-          onClick={() => handleButtonClick("Dailog")}
-        >
-          Dailogs
-        </button>
-        <button
-          className={`border border-black rounded-lg px-4 py-2 ${
-            selectedButton === "Code"
-              ? "bg-black text-white"
-              : "bg-white text-black"
-          }`}
-          onClick={() => handleButtonClick("Code")}
-        >
-          Code
-        </button>
-      </div>
-      <div className="w-full flex justify-center flex-col items-center space-y-8">
+   {/* buttoonssss */}
+   <div className="w-full flex justify-center pt-5 gap-3 mb-4 px-6">
+    <button
+      className={`border border-black rounded-lg px-4 py-2 ${
+        selectedButton === "Add Scene"
+          ? "bg-black text-white"
+          : "bg-white text-black"
+      }`}
+      onClick={() => {
+        addNewScene();
+      }}
+    >
+      Add Scene
+    </button>
+    <button
+  className={`border border-black rounded-lg px-4 py-2 ${
+    selectedButton === "Description"
+      ? "bg-black text-white"
+      : "bg-white text-black"
+  }`}
+  onClick={() => handleButtonClick("Description")}
+>
+  Description
+</button>
+    <button
+      className={`border border-black rounded-lg px-4 py-2 ${
+        selectedButton === "Characters"
+          ? "bg-black text-white"
+          : "bg-white text-black"
+      }`}
+      onClick={() => handleButtonClick("Characters")}
+    >
+      Characters
+    </button>
+    <button
+      className={`border border-black rounded-lg px-4 py-2 ${
+        selectedButton === "Dailog"
+          ? "bg-black text-white"
+          : "bg-white text-black"
+      }`}
+      onClick={() => handleButtonClick("Dailog")}
+    >
+      Dailogs
+    </button>
+    <button
+      className={`border border-black rounded-lg px-4 py-2 ${
+        selectedButton === "Code"
+          ? "bg-black text-white"
+          : "bg-white text-black"
+      }`}
+      onClick={() => handleButtonClick("Code")}
+    >
+      Code
+    </button>
+  </div>
+
+  <div className="w-full flex justify-center flex-col items-center space-y-8">
         {scenes.map((scene, sceneIndex) => (
           <div key={scene.id} className="w-11/12 bg-white rounded-lg lg:w-2/3">
             <div className="w-full bg-pink-100 p-4 mb-6 rounded-md shadow-md">
@@ -403,7 +386,7 @@ const Editor = () => {
                   )}
                 </div>
               </div>
-
+              
               {/* Characters section */}
               <div className="mb-3 flex items-center gap-2 flex-wrap">
                 <span className="text-xl font-medium">Characters:</span>
@@ -438,7 +421,8 @@ const Editor = () => {
                     key={lineIndex}
                     id={`scene-${sceneIndex}-line-${lineIndex}`}
                     ref={(el) =>
-                      (inputRefs.current[`scene-${sceneIndex}-line-${lineIndex}`] = el)
+                      (inputRefs.current[`scene-${sceneIndex}-line-${lineIndex}`] =
+                        el)
                     }
                     type="text"
                     value={line}
