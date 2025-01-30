@@ -1,23 +1,61 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { FaChevronDown, FaChevronUp, FaTrash } from "react-icons/fa";
 
 const WordEditor = () => {
-  const [scenes, setScenes] = useState([
-    {
-      id: 1,
-      title: "EXT. SOMEWHERE - DAY",
-      characters: [],
-      content: [
+  // Initialize scenes from localStorage or default state
+  const getStoredScenes = () => {
+    const storedScenes = localStorage.getItem("scenes");
+    if (storedScenes) {
+      try {
+        const parsedScenes = JSON.parse(storedScenes);
+        // Ensure each scene has a valid 'content' array
+        return parsedScenes.map(scene => ({
+          ...scene,
+          content: Array.isArray(scene.content) ? scene.content : [], // Fallback to empty array if content is invalid
+        }));
+      } catch (error) {
+        console.error("Error parsing scenes from localStorage", error);
+        // Return default state if JSON parsing fails
+        return [
+          {
+            id: 1,
+            title: "EXT. SOMEWHERE - DAY",
+            characters: [],
+            content: [
+              {
+                description: "", // Initially, only the description exists
+              },
+            ],
+            isExpanded: true,
+          },
+        ];
+      }
+    } else {
+      // Return default state if no scenes are stored in localStorage
+      return [
         {
-          description: "", // Initially, only the description exists
+          id: 1,
+          title: "EXT. SOMEWHERE - DAY",
+          characters: [],
+          content: [
+            {
+              description: "", // Initially, only the description exists
+            },
+          ],
+          isExpanded: true,
         },
-      ],
-      isExpanded: true,
-    },
-  ]);
+      ];
+    }
+  };
 
+  const [scenes, setScenes] = useState(getStoredScenes);
   const inputRefs = useRef({});
   const [selectedButton, setSelectedButton] = useState("Description");
+
+  // Save scenes to localStorage whenever scenes state changes
+  useEffect(() => {
+    localStorage.setItem("scenes", JSON.stringify(scenes));
+  }, [scenes]);
 
   const handleButtonClick = (buttonName) => {
     setSelectedButton(buttonName);
@@ -36,7 +74,7 @@ const WordEditor = () => {
 
         return {
           ...scene,
-          content: [...scene.content, newContent], // Append the new object to the content array
+          content: [...(scene.content || []), newContent], // Ensure content is always an array
         };
       })
     );
@@ -79,10 +117,13 @@ const WordEditor = () => {
   };
 
   const handleDeleteScene = (sceneId) => {
-    setScenes((prevScenes) => prevScenes.filter((scene) => scene.id !== sceneId));
+    setScenes((prevScenes) => {
+      const updatedScenes = prevScenes.filter((scene) => scene.id !== sceneId);
+      localStorage.setItem("scenes", JSON.stringify(updatedScenes));
+      return updatedScenes;
+    });
   };
-
-  console.log(scenes, "Scenes State");
+  
 
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col items-center">
