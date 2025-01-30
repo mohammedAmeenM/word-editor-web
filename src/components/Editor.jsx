@@ -2,10 +2,8 @@ import React, { useState, useRef, useEffect } from "react";
 import { FaBars, FaChevronDown, FaChevronUp, FaTrash } from "react-icons/fa";
 
 const Editor = () => {
-  // Load initial state from localStorage, or default to empty if not available
-  const loadScenesFromLocalStorage = () => {
-    const storedScenes = localStorage.getItem('scenes');
-    return storedScenes ? JSON.parse(storedScenes) : [{
+  const [scenes, setScenes] = useState([
+    {
       id: 1,
       title: "EXT. SOMEWHERE - DAY",
       lines: ["Click here to type your scene content..."],
@@ -27,11 +25,6 @@ const Editor = () => {
       firstInput.style.paddingLeft = "2%";
     }
   }, []);
-
-  // Save scenes to localStorage whenever it changes
-  useEffect(() => {
-    localStorage.setItem('scenes', JSON.stringify(scenes));
-  }, [scenes]);
 
   const addNewScene = () => {
     setSelectedButton("Description")
