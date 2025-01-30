@@ -62,12 +62,38 @@ const WordEditor = () => {
     );
   };
 
+  const handleAddScene = () => {
+    const newScene = {
+      id: scenes.length + 1, // Generate a unique ID
+      title: `EXT. NEW SCENE - DAY`, // Default title
+      characters: [],
+      content: [
+        {
+          description: "", // Initially, only the description exists
+        },
+      ],
+      isExpanded: true,
+    };
+
+    setScenes((prevScenes) => [...prevScenes, newScene]);
+  };
+
+  const handleDeleteScene = (sceneId) => {
+    setScenes((prevScenes) => prevScenes.filter((scene) => scene.id !== sceneId));
+  };
+
   console.log(scenes, "Scenes State");
 
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col items-center">
       {/* Buttons */}
       <div className="w-full flex justify-center pt-5 gap-3 mb-4 px-6">
+        <button
+          className={`border border-black rounded-lg px-4 py-2 bg-white text-black`}
+          onClick={handleAddScene}
+        >
+          Add Scene
+        </button>
         <button
           className={`border border-black rounded-lg px-4 py-2 ${
             selectedButton === "Description"
@@ -119,7 +145,10 @@ const WordEditor = () => {
                     {scene.isExpanded ? <FaChevronUp /> : <FaChevronDown />}
                   </button>
                   {scenes.length > 1 && (
-                    <button className="p-2 hover:bg-red-200 rounded-full text-red-500">
+                    <button
+                      className="p-2 hover:bg-red-200 rounded-full text-red-500"
+                      onClick={() => handleDeleteScene(scene.id)}
+                    >
                       <FaTrash />
                     </button>
                   )}
@@ -176,55 +205,55 @@ const WordEditor = () => {
 
                 {/* Render Characters Input */}
                 {content.characters !== undefined && (
-                    <div className="w-full flex justify-center">
-                  <input
-                    ref={(el) =>
-                      (inputRefs.current[
-                        `scene-${sceneIndex}-characters-${contentIndex}`
-                      ] = el)
-                    }
-                    type="text"
-                    className="w-1/2  text-center p-2 outline-none"
-                    placeholder="Type your characters..."
-                    value={content.characters}
-                    onChange={(e) =>
-                      handleContentChange(
-                        sceneIndex,
-                        contentIndex,
-                        "characters",
-                        e.target.value
-                      )
-                    }
-                  />
+                  <div className="w-full flex justify-center">
+                    <input
+                      ref={(el) =>
+                        (inputRefs.current[
+                          `scene-${sceneIndex}-characters-${contentIndex}`
+                        ] = el)
+                      }
+                      type="text"
+                      className="w-1/2 text-center p-2 outline-none"
+                      placeholder="Type your characters..."
+                      value={content.characters}
+                      onChange={(e) =>
+                        handleContentChange(
+                          sceneIndex,
+                          contentIndex,
+                          "characters",
+                          e.target.value
+                        )
+                      }
+                    />
                   </div>
                 )}
 
                 {/* Render Dialog Textarea */}
                 {content.dialog !== undefined && (
-                    <div className="w-full flex justify-center">
-                  <textarea
-                    ref={(el) =>
-                      (inputRefs.current[
-                        `scene-${sceneIndex}-dialog-${contentIndex}`
-                      ] = el)
-                    }
-                    className="w-3/5  overflow-hidden p-2 outline-none resize-none"
-                    rows={2}
-                    placeholder="Type your dialog..."
-                    value={content.dialog}
-                    onChange={(e) =>
-                      handleContentChange(
-                        sceneIndex,
-                        contentIndex,
-                        "dialog",
-                        e.target.value
-                      )
-                    }
-                    onInput={(e) => {
-                      e.target.style.height = "auto"; // Reset height
-                      e.target.style.height = `${e.target.scrollHeight}px`; // Adjust height based on content
-                    }}
-                  />
+                  <div className="w-full flex justify-center">
+                    <textarea
+                      ref={(el) =>
+                        (inputRefs.current[
+                          `scene-${sceneIndex}-dialog-${contentIndex}`
+                        ] = el)
+                      }
+                      className="w-3/5 overflow-hidden p-2 outline-none resize-none"
+                      rows={2}
+                      placeholder="Type your dialog..."
+                      value={content.dialog}
+                      onChange={(e) =>
+                        handleContentChange(
+                          sceneIndex,
+                          contentIndex,
+                          "dialog",
+                          e.target.value
+                        )
+                      }
+                      onInput={(e) => {
+                        e.target.style.height = "auto"; // Reset height
+                        e.target.style.height = `${e.target.scrollHeight}px`; // Adjust height based on content
+                      }}
+                    />
                   </div>
                 )}
               </div>
