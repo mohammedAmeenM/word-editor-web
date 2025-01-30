@@ -14,8 +14,8 @@ function App() {
   return (
     <>
     <Routes>
-      <Route path='/' element={<Editor />} />
-      <Route path='/word' element={<WordEditor />} />
+      <Route path='/word' element={<Editor />} />
+      <Route path='/' element={<WordEditor />} />
     </Routes>
 
     </>
