@@ -20,11 +20,3 @@ const SlateEditor = () => {
         return <p {...props.attributes}>{props.children}</p>;
     }
   }, []);
-
-  const renderLeaf = useCallback((props) => {
-    return <span {...props.attributes} style={{ fontWeight: props.leaf.bold ? 'bold' : 'normal' }}>{props.children}</span>;
-  }, []);
-
-  const handleKeyDown = (event) => {
-    if (event.key === 'b' && event.ctrlKey) {
-      event.preventDefault();
