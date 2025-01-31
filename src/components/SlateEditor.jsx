@@ -28,12 +28,3 @@ const SlateEditor = () => {
   const handleKeyDown = (event) => {
     if (event.key === 'b' && event.ctrlKey) {
       event.preventDefault();
-      toggleBoldMark(editor);
-    }
-  };
-
-  const toggleBoldMark = (editor) => {
-    const [match] = Editor.nodes(editor, {
-      match: (n) => n.bold === true,
-      universal: true,
-    });
