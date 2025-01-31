@@ -46,8 +46,24 @@ const WordEditor = () => {
       ];
     }
   };
-
   const [scenes, setScenes] = useState(getStoredScenes);
+
+  useEffect(() => {
+    // Function to adjust a single textarea's height
+    const adjustTextareaHeight = (textarea) => {
+      if (textarea) {
+        textarea.style.height = 'auto';
+        textarea.style.height = `${textarea.scrollHeight}px`;
+      }
+    };
+
+    // Adjust all textareas in the component
+    Object.values(inputRefs.current).forEach((element) => {
+      if (element && element.tagName.toLowerCase() === 'textarea') {
+        adjustTextareaHeight(element);
+      }
+    });
+  }, [scenes]);
   useEffect(() => {
     localStorage.setItem("scenes", JSON.stringify(scenes));
   }, [scenes]);
@@ -117,7 +133,16 @@ const WordEditor = () => {
           : scene
       )
     );
-};
+
+    // Adjust height after content change
+    setTimeout(() => {
+      const textarea = inputRefs.current[`scene-${sceneIndex}-${field}-${contentIndex}`];
+      if (textarea && textarea.tagName.toLowerCase() === 'textarea') {
+        textarea.style.height = 'auto';
+        textarea.style.height = `${textarea.scrollHeight}px`;
+      }
+    }, 0);
+  };
 
   const handleAddScene = () => {
     const newScene = {
@@ -285,20 +310,20 @@ const WordEditor = () => {
   console.log(scenes, "Scenes State");
 
   return (
-    <div className="min-h-screen bg-gray-100 flex flex-col items-center">
+    <div className="min-h-screen bg-gray-100 flex flex-col items-center pb-10">
       {/* Buttons */}
       <div className="w-full flex justify-center pt-5 gap-3 mb-4 px-6">
         <button
-          className={`border text-xl border-black rounded-lg px-4 py-2 bg-white text-black`}
+          className={`border text-xl font-medium border-black rounded-lg px-4 py-2 bg-white text-black`}
           onClick={handleAddScene}
         >
           Add Scene
         </button>
         <button
-          className={`border text-xl border-black rounded-lg px-4 py-2 ${
+          className={`border text-xl border-black  rounded-lg px-4 py-2 ${
             selectedButton === "Description"
-              ? "bg-black text-white"
-              : "bg-white text-black"
+              ? "bg-black text-white font-semibold"
+              : "bg-white text-black font-medium"
           }`}
           onClick={() => handleButtonClick("Description")}
         >
@@ -307,8 +332,8 @@ const WordEditor = () => {
         <button
           className={`border text-xl border-black rounded-lg px-4 py-2 ${
             selectedButton === "Characters"
-              ? "bg-black text-white"
-              : "bg-white text-black"
+              ? "bg-black text-white font-semibold"
+              : "bg-white text-black font-medium"
           }`}
           onClick={() => handleButtonClick("Characters")}
         >
@@ -317,8 +342,8 @@ const WordEditor = () => {
         <button
           className={`border text-xl border-black rounded-lg px-4 py-2 ${
             selectedButton === "Dialog"
-              ? "bg-black text-white"
-              : "bg-white text-black"
+              ? "bg-black text-white font-semibold"
+              : "bg-white text-black font-medium"
           }`}
           onClick={() => handleButtonClick("Dialog")}
         >
@@ -382,10 +407,9 @@ const WordEditor = () => {
                         `scene-${sceneIndex}-description-${contentIndex}`
                       ] = el)
                     }
-                    className="w-full p-4  text-2xl outline-none overflow-hidden resize-none"
-                    rows={1}
-                    placeholder="Type your description..."
+                    className="w-full p-4 text-2xl outline-none resize-none"
                     value={content.description}
+                    placeholder="Type Your Content Here...................."
                     onChange={(e) =>
                       handleContentChange(
                         sceneIndex,
@@ -395,34 +419,22 @@ const WordEditor = () => {
                       )
                     }
                     onKeyDown={(e) => {
-                        if (e.key === "Tab") {
-                          handleKeyDown(e, sceneIndex, contentIndex);
-                        } else if (e.key === "Enter" && !e.shiftKey) {
-                          e.preventDefault(); // Prevent default behavior
-                      
-                          // Insert a newline at the current cursor position
-                          const cursorPosition = e.target.selectionStart;
-                          const currentValue = e.target.value;
-                          const newValue =
-                            currentValue.slice(0, cursorPosition) +
-                            "\n" +
-                            currentValue.slice(cursorPosition);
-                      
-                          handleContentChange(sceneIndex, contentIndex, "description", newValue);
-                      
-                          // Set cursor position after the new line
-                          setTimeout(() => {
-                            e.target.selectionStart = e.target.selectionEnd = cursorPosition + 1;
-                          }, 0);
-                      
-                          // Increase the row count by 1 manually
-                          e.target.rows += 1;
-                        }
-                      }}
-                      onInput={(e) => {
-                        e.target.style.height = "auto"; // Reset height
-                        e.target.style.height = `${e.target.scrollHeight}px`; // Adjust height dynamically
-                      }}
+                      if (e.key === "Tab") {
+                        handleKeyDown(e, sceneIndex, contentIndex);
+                      } else if (e.key === "Enter" && !e.shiftKey) {
+                        e.preventDefault();
+                        const cursorPosition = e.target.selectionStart;
+                        const currentValue = e.target.value;
+                        const newValue =
+                          currentValue.slice(0, cursorPosition) +
+                          "\n" +
+                          currentValue.slice(cursorPosition);
+                        handleContentChange(sceneIndex, contentIndex, "description", newValue);
+                        setTimeout(() => {
+                          e.target.selectionStart = e.target.selectionEnd = cursorPosition + 1;
+                        }, 0);
+                      }
+                    }}
                   />
                 )}
 
