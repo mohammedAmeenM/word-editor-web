@@ -156,56 +156,68 @@ const WordEditor = () => {
   const handleKeyDown = (event, sceneIndex, contentIndex) => {
     const input = event.target;
     if (event.key === "Backspace" && input.value === "") {
-        event.preventDefault();
+      event.preventDefault();
     
-        // Get references to all inputs/textareas in order
-        const allInputRefs = Object.keys(inputRefs.current)
-          .sort((a, b) => {
-            const [sceneA, contentA] = a.match(/scene-(\d+).*?-(\d+)/).slice(1);
-            const [sceneB, contentB] = b.match(/scene-(\d+).*?-(\d+)/).slice(1);
-            return sceneA === sceneB ? contentA - contentB : sceneA - sceneB;
-          });
-    
-        // Find current input index
-        const currentInputKey = allInputRefs.find(
-          key => inputRefs.current[key] === input
-        );
-        const currentIndex = allInputRefs.indexOf(currentInputKey);
-    
-        setScenes(prevScenes => {
-          const updatedScenes = prevScenes.map((scene, index) => {
-            if (index === sceneIndex) {
-              const newContent = scene.content.filter((_, idx) => idx !== contentIndex);
-              return {
-                ...scene,
-                content: newContent
-              };
-            }
-            return scene;
-          });
-          
-          // Filter out scenes with empty content
-          return updatedScenes.filter(scene => scene.content.length > 0);
+      // Get references to all inputs/textareas in order
+      const allInputRefs = Object.keys(inputRefs.current)
+        .sort((a, b) => {
+          const [sceneA, contentA] = a.match(/scene-(\d+).*?-(\d+)/).slice(1);
+          const [sceneB, contentB] = b.match(/scene-(\d+).*?-(\d+)/).slice(1);
+          return sceneA === sceneB ? contentA - contentB : sceneA - sceneB;
         });
     
-        // Focus the previous input if available
-        setTimeout(() => {
-          if (currentIndex > 0) {
-            const prevInputKey = allInputRefs[currentIndex - 1];
-            const prevInput = inputRefs.current[prevInputKey];
-            if (prevInput) {
-              prevInput.focus();
-              // Place cursor at the end of the previous input
-              if (prevInput.tagName.toLowerCase() === 'textarea') {
-                const length = prevInput.value.length;
-                prevInput.setSelectionRange(length, length);
-              }
+      // Find current input index
+      const currentInputKey = allInputRefs.find(
+        key => inputRefs.current[key] === input
+      );
+      const currentIndex = allInputRefs.indexOf(currentInputKey);
+    
+      // Check the previous input type to set the correct state
+      if (currentIndex > 0) {
+        const prevInputKey = allInputRefs[currentIndex - 1];
+        if (prevInputKey.includes('description')) {
+          setSelectedButton("Description");
+        } else if (prevInputKey.includes('characters')) {
+          setSelectedButton("Characters");
+        } else if (prevInputKey.includes('dialog')) {
+          setSelectedButton("Dialog");
+        }
+      }
+    
+      setScenes(prevScenes => {
+        const updatedScenes = prevScenes.map((scene, index) => {
+          if (index === sceneIndex) {
+            const newContent = scene.content.filter((_, idx) => idx !== contentIndex);
+            return {
+              ...scene,
+              content: newContent
+            };
+          }
+          return scene;
+        });
+        
+        // Filter out scenes with empty content
+        return updatedScenes.filter(scene => scene.content.length > 0);
+      });
+    
+      // Focus the previous input if available
+      setTimeout(() => {
+        if (currentIndex > 0) {
+          const prevInputKey = allInputRefs[currentIndex - 1];
+          const prevInput = inputRefs.current[prevInputKey];
+          if (prevInput) {
+            prevInput.focus();
+            // Place cursor at the end of the previous input
+            if (prevInput.tagName.toLowerCase() === 'textarea') {
+              const length = prevInput.value.length;
+              prevInput.setSelectionRange(length, length);
             }
           }
-        }, 0);
+        }
+      }, 0);
     
-        return;
-      }
+      return;
+    }
     if (event.key === "Tab") {
       event.preventDefault();
       setSelectedButton("Characters");
@@ -222,7 +234,8 @@ const WordEditor = () => {
       // Only prevent default and switch mode if shift+enter is not pressed
       if (!event.shiftKey && selectedButton !== "Description") {
         event.preventDefault();
-        if (selectedButton === "Characters") {
+        if (selectedButton === "Characters" && input.value.trim() !== "") {
+          // Only proceed if there's a value in the characters input
           setScenes((prevScenes) =>
             prevScenes.map((scene, index) =>
               index === sceneIndex
@@ -239,13 +252,10 @@ const WordEditor = () => {
           handleButtonClick("Dialog");
           // Focus the dialog textarea
           setTimeout(() => {
-            const dialogInput =
-              inputRefs.current[
-                `scene-${sceneIndex}-dialog-${contentIndex + 1}`
-              ];
+            const dialogInput = inputRefs.current[`scene-${sceneIndex}-dialog-${contentIndex + 1}`];
             if (dialogInput) dialogInput.focus();
           }, 0);
-        } else if (selectedButton === "Dialog") {
+        } else if (selectedButton === "Dialog"&& input.value.trim() !== "") {
           setSelectedButton("Characters");
           handleButtonClick("Characters");
           // Focus the characters input
