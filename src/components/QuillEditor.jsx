@@ -22,19 +22,3 @@ const QuillEditor = () => {
       },
     });
 
-    // Listen for text changes and update the content state
-    quill.on('text-change', () => {
-      setEditorContent(quill.root.innerHTML);
-    });
-
-    // Cleanup editor when the component is unmounted
-    return () => {
-      quill.off('text-change');
-    };
-  }, []);
-
-  const handleSave = () => {
-    // Do something with the editor content, e.g., send it to the server
-    console.log('Editor content:', editorContent);
-  };
-
