@@ -37,23 +37,3 @@ const SlateEditor = () => {
       match: (n) => n.bold === true,
       universal: true,
     });
-    Transforms.setNodes(
-      editor,
-      { bold: !match },
-      { match: (n) => Text.isText(n), split: true }
-    );
-  };
-
-  return (
-    <Slate editor={editor} value={value} onChange={(newValue) => setValue(newValue)}>
-      <Editable
-        renderElement={renderElement}
-        renderLeaf={renderLeaf}
-        placeholder="Enter some text..."
-        onKeyDown={handleKeyDown}
-      />
-    </Slate>
-  );
-};
-
-export default SlateEditor;
