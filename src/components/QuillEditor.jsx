@@ -38,12 +38,3 @@ const QuillEditor = () => {
     console.log('Editor content:', editorContent);
   };
 
-  return (
-    <div className="editor-container">
-      <div ref={quillRef} className="quill-editor" />
-      <button onClick={handleSave} className="save-btn">Save Content</button>
-    </div>
-  );
-};
-
-export default QuillEditor;
