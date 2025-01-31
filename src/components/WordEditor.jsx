@@ -71,31 +71,27 @@ const WordEditor = () => {
   const inputRefs = useRef({});
   const [selectedButton, setSelectedButton] = useState("Description");
 
+
+
   const handleButtonClick = (buttonName) => {
     setSelectedButton(buttonName);
-
-    // Get the currently focused element
+  
     const activeElement = document.activeElement;
-
-    // Find which scene is currently active based on the focused element's ref
+  
     let activeSceneIndex = -1;
-
     Object.keys(inputRefs.current).forEach((key) => {
       if (inputRefs.current[key] === activeElement) {
-        // Extract scene index from the ref key (format: scene-{index}-type-{contentIndex})
         const match = key.match(/scene-(\d+)/);
         if (match) {
           activeSceneIndex = parseInt(match[1]);
         }
       }
     });
-
+  
     setScenes((prevScenes) =>
       prevScenes.map((scene, index) => {
-        // Only update the scene that is currently active
         if (index === activeSceneIndex) {
           let newContent = {};
-
           if (buttonName === "Dialog") {
             newContent = { dialog: "" };
           } else if (buttonName === "Characters") {
@@ -103,18 +99,16 @@ const WordEditor = () => {
           } else if (buttonName === "Description") {
             newContent = { description: "" };
           }
-
+  
           return {
             ...scene,
-            content: [...(scene.content || []), newContent], // Ensure content is always an array
+            content: [...scene.content, newContent],
           };
         }
-        // Return other scenes unchanged
         return scene;
       })
     );
   };
-
   const handleContentChange = (sceneIndex, contentIndex, field, value) => {
     setScenes((prevScenes) =>
       prevScenes.map((scene, index) =>
@@ -183,64 +177,95 @@ const WordEditor = () => {
     if (event.key === "Backspace" && input.value === "") {
       event.preventDefault();
     
-      // Get references to all inputs/textareas in order
+      // Don't delete if this is the only content in the scene
+      const currentScene = scenes[sceneIndex];
+      if (currentScene.content.length === 1) {
+        return;
+      }
+    
+      // Get references to all inputs in order
       const allInputRefs = Object.keys(inputRefs.current)
         .sort((a, b) => {
-          const [sceneA, contentA] = a.match(/scene-(\d+).*?-(\d+)/).slice(1);
-          const [sceneB, contentB] = b.match(/scene-(\d+).*?-(\d+)/).slice(1);
+          const [sceneA, contentA] = a.split('-').slice(1);
+          const [sceneB, contentB] = b.split('-').slice(1);
           return sceneA === sceneB ? contentA - contentB : sceneA - sceneB;
         });
-    
+    console.log(allInputRefs,'11111111111111111111111111')
       // Find current input index
       const currentInputKey = allInputRefs.find(
-        key => inputRefs.current[key] === input
+        (key) => inputRefs.current[key] === input
       );
       const currentIndex = allInputRefs.indexOf(currentInputKey);
     
-      // Check the previous input type to set the correct state
+      // Update selected button based on previous input type
       if (currentIndex > 0) {
         const prevInputKey = allInputRefs[currentIndex - 1];
-        if (prevInputKey.includes('description')) {
-          setSelectedButton("Description");
-        } else if (prevInputKey.includes('characters')) {
-          setSelectedButton("Characters");
-        } else if (prevInputKey.includes('dialog')) {
-          setSelectedButton("Dialog");
-        }
+        const type = prevInputKey.split('-')[2]; // Get input type from key
+        setSelectedButton(type.charAt(0).toUpperCase() + type.slice(1));
       }
     
-      setScenes(prevScenes => {
-        const updatedScenes = prevScenes.map((scene, index) => {
-          if (index === sceneIndex) {
-            const newContent = scene.content.filter((_, idx) => idx !== contentIndex);
-            return {
-              ...scene,
-              content: newContent
-            };
+      // Update scenes state
+      setScenes((prevScenes) => {
+        const newScenes = prevScenes.map((scene, idx) => {
+          if (idx === sceneIndex) {
+            const newContent = scene.content.filter((_, i) => i !== contentIndex);
+            return { ...scene, content: newContent };
           }
           return scene;
         });
         
-        // Filter out scenes with empty content
-        return updatedScenes.filter(scene => scene.content.length > 0);
+        // Remove empty scenes
+        return newScenes.filter(scene => scene.content.length > 0);
       });
     
-      // Focus the previous input if available
+      // Focus previous input
       setTimeout(() => {
         if (currentIndex > 0) {
           const prevInputKey = allInputRefs[currentIndex - 1];
           const prevInput = inputRefs.current[prevInputKey];
+          
           if (prevInput) {
             prevInput.focus();
-            // Place cursor at the end of the previous input
-            if (prevInput.tagName.toLowerCase() === 'textarea') {
-              const length = prevInput.value.length;
-              prevInput.setSelectionRange(length, length);
+            if (prevInput.tagName.toLowerCase() === "textarea") {
+              prevInput.setSelectionRange(prevInput.value.length, prevInput.value.length);
             }
           }
         }
       }, 0);
-    
+      
+      return;
+    }
+    if (event.key === "Tab" && event.shiftKey) {
+      event.preventDefault();
+  
+      // Only create a new description if the selected button is Characters or Dialog
+      if (selectedButton === "Characters" || selectedButton === "Dialog") {
+        setSelectedButton("Description");
+        setScenes((prevScenes) =>
+          prevScenes.map((scene, index) => {
+            if (index === sceneIndex) {
+              const newContent = [...scene.content];
+  
+              // Insert a new characters object after the current dialog input
+              if (selectedButton === "Characters" || selectedButton === "Dialog" && input.value.trim() !== "") {
+                const insertIndex = contentIndex + 1;
+                newContent.splice(insertIndex, 0, { description: "" });
+  
+                return { ...scene, content: newContent };
+              }
+            }
+            return scene;
+          })
+        );
+  
+        // Focus the newly created description textarea
+        setTimeout(() => {
+          const descriptionInput = inputRefs.current[
+            `scene-${sceneIndex}-description-${contentIndex + 1}`
+          ];
+          if (descriptionInput) descriptionInput.focus();
+        }, 0);
+      }
       return;
     }
     if (event.key === "Tab") {
@@ -273,16 +298,46 @@ const WordEditor = () => {
                 : scene
             )
           );
+          setScenes((prevScenes) =>
+            prevScenes.map((scene, index) => {
+              if (index === sceneIndex) {
+                const newContent = [...scene.content];
+    
+                // Insert a new dialog object after the current character input
+                if (selectedButton === "Characters" && input.value.trim() !== "") {
+                  const insertIndex = contentIndex + 1;
+                  newContent.splice(insertIndex, 0, { dialog: "" });
+    
+                  return { ...scene, content: newContent };
+                }
+              }
+              return scene;
+            })
+          );
           setSelectedButton("Dialog");
-          handleButtonClick("Dialog");
           // Focus the dialog textarea
           setTimeout(() => {
             const dialogInput = inputRefs.current[`scene-${sceneIndex}-dialog-${contentIndex + 1}`];
             if (dialogInput) dialogInput.focus();
           }, 0);
-        } else if (selectedButton === "Dialog"&& input.value.trim() !== "") {
+        } else if (selectedButton === "Dialog" && input.value.trim() !== "") {
+          setScenes((prevScenes) =>
+            prevScenes.map((scene, index) => {
+              if (index === sceneIndex) {
+                const newContent = [...scene.content];
+    
+                // Insert a new characters object after the current dialog input
+                if (selectedButton === "Dialog" && input.value.trim() !== "") {
+                  const insertIndex = contentIndex + 1;
+                  newContent.splice(insertIndex, 0, { characters: "" });
+    
+                  return { ...scene, content: newContent };
+                }
+              }
+              return scene;
+            })
+          );
           setSelectedButton("Characters");
-          handleButtonClick("Characters");
           // Focus the characters input
           setTimeout(() => {
             const charInput =
@@ -307,7 +362,7 @@ const WordEditor = () => {
     ));
   };
 
-  console.log(scenes, "Scenes State");
+
 
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col items-center pb-10">
@@ -327,7 +382,7 @@ const WordEditor = () => {
           }`}
           onClick={() => handleButtonClick("Description")}
         >
-          Description
+          Scene Action
         </button>
         <button
           className={`border text-xl border-black rounded-lg px-4 py-2 ${
@@ -401,41 +456,49 @@ const WordEditor = () => {
               <div key={contentIndex}>
                 {/* Render Description Textarea */}
                 {content.description !== undefined && (
-                  <textarea
-                    ref={(el) =>
-                      (inputRefs.current[
-                        `scene-${sceneIndex}-description-${contentIndex}`
-                      ] = el)
+                <textarea
+                ref={(el) =>
+                  (inputRefs.current[
+                    `scene-${sceneIndex}-description-${contentIndex}`
+                  ] = el)
+                }
+                className="w-full p-4 text-2xl outline-none resize-none"
+                value={content.description}
+                placeholder="Type Your Content Here...................."
+                onChange={(e) =>
+                  handleContentChange(
+                    sceneIndex,
+                    contentIndex,
+                    "description",
+                    e.target.value
+                  )
+                }
+                onKeyDown={(e) => {
+                  if (e.key === "Tab") {
+                    handleKeyDown(e, sceneIndex, contentIndex);
+                  } else if (e.key === "Enter" && !e.shiftKey) {
+                    // Check if the textarea is not empty
+                    if (e.target.value.trim() !== "") {
+                      e.preventDefault(); // Prevent default behavior (new line)
+                      const cursorPosition = e.target.selectionStart;
+                      const currentValue = e.target.value;
+                      const newValue =
+                        currentValue.slice(0, cursorPosition) +
+                        "\n" +
+                        currentValue.slice(cursorPosition);
+                      handleContentChange(sceneIndex, contentIndex, "description", newValue);
+                      setTimeout(() => {
+                        e.target.selectionStart = e.target.selectionEnd = cursorPosition + 1;
+                      }, 0);
+                    } else {
+                      e.preventDefault(); // Prevent default behavior if the textarea is empty
                     }
-                    className="w-full p-4 text-2xl outline-none resize-none"
-                    value={content.description}
-                    placeholder="Type Your Content Here...................."
-                    onChange={(e) =>
-                      handleContentChange(
-                        sceneIndex,
-                        contentIndex,
-                        "description",
-                        e.target.value
-                      )
-                    }
-                    onKeyDown={(e) => {
-                      if (e.key === "Tab") {
-                        handleKeyDown(e, sceneIndex, contentIndex);
-                      } else if (e.key === "Enter" && !e.shiftKey) {
-                        e.preventDefault();
-                        const cursorPosition = e.target.selectionStart;
-                        const currentValue = e.target.value;
-                        const newValue =
-                          currentValue.slice(0, cursorPosition) +
-                          "\n" +
-                          currentValue.slice(cursorPosition);
-                        handleContentChange(sceneIndex, contentIndex, "description", newValue);
-                        setTimeout(() => {
-                          e.target.selectionStart = e.target.selectionEnd = cursorPosition + 1;
-                        }, 0);
-                      }
-                    }}
-                  />
+                  }else if(e.key === "Backspace" && e.target.value === ""){
+                    handleKeyDown(e, sceneIndex, contentIndex);
+                  }
+                }}
+                onFocus={() => setSelectedButton("Description")}
+              />
                 )}
 
                 {/* Render Characters Input */}
@@ -462,6 +525,7 @@ const WordEditor = () => {
                       onKeyDown={(e) =>
                         handleKeyDown(e, sceneIndex, contentIndex)
                       }
+                      onFocus={() => setSelectedButton("Characters")}
                     />
                   </div>
                 )}
@@ -494,6 +558,7 @@ const WordEditor = () => {
                         e.target.style.height = "auto"; // Reset height
                         e.target.style.height = `${e.target.scrollHeight}px`; // Adjust height based on content
                       }}
+                      onFocus={() => setSelectedButton("Dialog")}
                     />
                   </div>
                 )}
