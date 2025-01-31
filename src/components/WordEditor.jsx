@@ -365,51 +365,62 @@ const WordEditor = () => {
 
 
   return (
-    <div className="min-h-screen bg-gray-100 flex flex-col items-center pb-10">
+    <div className="min-h-screen bg-gray-100  ">
+      <div className="flex w-full justify-center pt-4">
+        <input type="text" className="text-5xl font-semibold bg-transparent outline-none w-2/3 text-center border-b-4 border-black border-opacity-30 mb-6 py-2" defaultValue={"Type Your Filim Name "} />
+      </div>
+      <div className="flex">
       {/* Buttons */}
-      <div className="w-full flex justify-center pt-5 gap-3 mb-4 px-6">
-        <button
-          className={`border text-xl font-medium border-black rounded-lg px-4 py-2 bg-white text-black`}
-          onClick={handleAddScene}
-        >
-          Add Scene
-        </button>
-        <button
-          className={`border text-xl border-black  rounded-lg px-4 py-2 ${
+      <div className="w-1/4  flex flex-col mt-3 p-4 gap-3 fixed top-[30%] left-4 ">
+       <div className="flex flex-col p-4 border border-opacity-20 space-y-3 bg-gray-100 border-black rounded-xl">
+        <div
+          className={`border  border-black  border-opacity-30  rounded-lg px-4 py-2 ${
             selectedButton === "Description"
-              ? "bg-black text-white font-semibold"
+              ? "bg-pink-100 text-black font-semibold"
               : "bg-white text-black font-medium"
           }`}
-          onClick={() => handleButtonClick("Description")}
+       
         >
-          Scene Action
-        </button>
-        <button
-          className={`border text-xl border-black rounded-lg px-4 py-2 ${
+         <p className="text-xl font-semibold p-1">Scene Action</p><hr className="border-black border-opacity-20" />
+         <div className="p-2">
+          <p className="text-lg">Press Keyboard Shift+Tab</p>
+         </div>
+        </div>
+        <div
+          className={`border  border-black border-opacity-30  rounded-lg px-4 py-2 ${
             selectedButton === "Characters"
-              ? "bg-black text-white font-semibold"
+              ? "bg-pink-100 text-black font-semibold"
               : "bg-white text-black font-medium"
           }`}
-          onClick={() => handleButtonClick("Characters")}
+   
         >
-          Characters
-        </button>
-        <button
-          className={`border text-xl border-black rounded-lg px-4 py-2 ${
+          <p className="text-xl font-semibold p-1">Add Character</p><hr className="border-black border-opacity-20" />
+          <div className="p-2">
+          <p className="text-lg">Press Keyboard Tab</p>
+         </div>
+        </div>
+        <div
+          className={`border  border-black border-opacity-30  rounded-lg px-4 py-2 ${
             selectedButton === "Dialog"
-              ? "bg-black text-white font-semibold"
+              ? "bg-pink-100 text-black font-semibold"
               : "bg-white text-black font-medium"
           }`}
-          onClick={() => handleButtonClick("Dialog")}
+     
         >
-          Dialog
-        </button>
+          <p className="text-xl font-semibold p-1">Add Dailog</p><hr className="border-black border-opacity-20" />
+          <div className="p-2">
+          <p className="text-lg">Type Character & Press Enter</p>
+         </div>
+        </div>
+        </div>
       </div>
 
       {/* Scenes */}
-      <div className="w-full flex justify-center flex-col items-center space-y-8">
+      <div className="w-3/4  px-12 mt-7 flex ml-[25%]  flex-col space-y-8  "
+      
+      >
         {scenes.map((scene, sceneIndex) => (
-          <div key={scene.id} className="w-11/12 bg-white rounded-lg lg:w-2/3">
+          <div key={scene.id} className="w-full  bg-white rounded-lg ">
             <div className="w-full bg-pink-100 p-4 mb-6 rounded-md shadow-md">
               <div className="flex items-center gap-2 justify-between mb-3">
                 <span className="text-2xl bg-gray-200 py-1 px-3 rounded-md">
@@ -566,6 +577,15 @@ const WordEditor = () => {
             ))}
           </div>
         ))}
+      <div className="mt-7 flex justify-center pb-8">
+      <button
+          className={`border text-xl font-bold border-black border-opacity-30 hover:bg-gray-300 rounded-lg px-4 py-2 bg-white text-black`}
+          onClick={handleAddScene}
+        >
+          Add Scene
+        </button>
+      </div>
+      </div>
       </div>
     </div>
   );
