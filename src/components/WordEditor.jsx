@@ -367,11 +367,11 @@ const WordEditor = () => {
   return (
     <div className="min-h-screen bg-gray-100  ">
       <div className="flex w-full justify-center pt-4">
-        <input type="text" className="text-5xl font-semibold bg-transparent outline-none w-2/3 text-center border-b-4 border-black border-opacity-30 mb-6 py-2" defaultValue={"Type Your Filim Name "} />
+        <input type="text" className="text-5xl font-semibold bg-transparent outline-none w-2/3 text-center border-b-4 border-black border-opacity-30 mb-6 py-2" defaultValue={"Enter Your Filim Name "} />
       </div>
       <div className="flex">
       {/* Buttons */}
-      <div className="w-1/4  flex flex-col mt-3 p-4 gap-3 fixed top-[30%] left-4 ">
+      <div className="w-1/4  flex flex-col mt-3 p-4 gap-3 fixed top-[27%] left-4 ">
        <div className="flex flex-col p-4 border border-opacity-20 space-y-3 bg-gray-100 border-black rounded-xl">
         <div
           className={`border  border-black  border-opacity-30  rounded-lg px-4 py-2 ${
