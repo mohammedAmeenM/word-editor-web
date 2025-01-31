@@ -1,6 +1,5 @@
 
 import './App.css'
-// import DraftEditor from './components/DraftEditor'
 import Editor from './components/Editor'
 import { Route, Routes } from 'react-router-dom'
 import WordEditor from './components/WordEditor'
