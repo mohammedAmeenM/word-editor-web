@@ -365,70 +365,74 @@ const WordEditor = () => {
 
 
   return (
-    <div className="min-h-screen bg-gray-100  ">
-      <div className="flex w-full justify-center pt-4">
-        <input type="text" className="text-5xl font-semibold bg-transparent outline-none w-2/3 text-center border-b-4 border-black border-opacity-30 mb-6 py-2" defaultValue={"Enter Your Filim Name "} />
-      </div>
-      <div className="flex">
-      {/* Buttons */}
-      <div className="w-1/4  flex flex-col mt-3 p-4 gap-3 fixed top-[27%] left-4 ">
-       <div className="flex flex-col p-4 border border-opacity-20 space-y-3 bg-gray-100 border-black rounded-xl">
-        <div
-          className={`border  border-black  border-opacity-30  rounded-lg px-4 py-2 ${
-            selectedButton === "Description"
-              ? "bg-pink-100 text-black font-semibold"
+    <div className="min-h-screen bg-gray-100">
+    {/* Header - Responsive title input */}
+    <div className="flex w-full justify-center p-4">
+      <input 
+        type="text" 
+        className="text-2xl md:text-3xl lg:text-4xl xl:text-4xl 2xl:text-5xl font-semibold bg-transparent outline-none w-full md:w-2/3 text-center border-b-4 border-black border-opacity-30 mb-6 py-2" 
+        defaultValue="Enter Your Film Name"
+      />
+    </div>
+
+    <div className="flex flex-col lg:flex-row">
+      {/* Sidebar Controls - Responsive positioning */}
+      <div className="w-full lg:w-1/4 p-4 lg:sticky lg:top-0 lg:h-screen">
+        <div className="flex flex-col p-4 border border-opacity-20 space-y-3 bg-gray-100 border-black rounded-xl">
+          {/* Scene Action Button */}
+          <div className={`border border-black border-opacity-30 rounded-lg px-4 py-2 ${
+            selectedButton === "Description" 
+              ? "bg-pink-100 text-black font-semibold" 
               : "bg-white text-black font-medium"
-          }`}
-       
-        >
-         <p className="text-xl font-semibold p-1">Scene Action</p><hr className="border-black border-opacity-20" />
-         <div className="p-2">
-          <p className="text-lg">Press Keyboard Shift+Tab</p>
-         </div>
-        </div>
-        <div
-          className={`border  border-black border-opacity-30  rounded-lg px-4 py-2 ${
+          }`}>
+            <p className="text-lg md:text-xl font-semibold p-1">Scene Action</p>
+            <hr className="border-black border-opacity-20" />
+            <div className="p-2">
+              <p className="text-base md:text-lg">Press Keyboard Shift+Tab</p>
+            </div>
+          </div>
+
+          {/* Add Character Button */}
+          <div className={`border border-black border-opacity-30 rounded-lg px-4 py-2 ${
             selectedButton === "Characters"
               ? "bg-pink-100 text-black font-semibold"
               : "bg-white text-black font-medium"
-          }`}
-   
-        >
-          <p className="text-xl font-semibold p-1">Add Character</p><hr className="border-black border-opacity-20" />
-          <div className="p-2">
-          <p className="text-lg">Press Keyboard Tab</p>
-         </div>
-        </div>
-        <div
-          className={`border  border-black border-opacity-30  rounded-lg px-4 py-2 ${
+          }`}>
+            <p className="text-lg md:text-xl font-semibold p-1">Add Character</p>
+            <hr className="border-black border-opacity-20" />
+            <div className="p-2">
+              <p className="text-base md:text-lg">Press Keyboard Tab</p>
+            </div>
+          </div>
+
+          {/* Add Dialog Button */}
+          <div className={`border border-black border-opacity-30 rounded-lg px-4 py-2 ${
             selectedButton === "Dialog"
               ? "bg-pink-100 text-black font-semibold"
               : "bg-white text-black font-medium"
-          }`}
-     
-        >
-          <p className="text-xl font-semibold p-1">Add Dailog</p><hr className="border-black border-opacity-20" />
-          <div className="p-2">
-          <p className="text-lg">Type Character & Press Enter</p>
-         </div>
-        </div>
+          }`}>
+            <p className="text-lg md:text-xl font-semibold p-1">Add Dialog</p>
+            <hr className="border-black border-opacity-20" />
+            <div className="p-2">
+              <p className="text-base md:text-lg">Type Character & Press Enter</p>
+            </div>
+          </div>
         </div>
       </div>
 
-      {/* Scenes */}
-      <div className="w-3/4  px-12 mt-7 flex ml-[25%]  flex-col space-y-8  "
-      
-      >
+      {/* Main Content Area - Responsive width and padding */}
+      <div className="w-full lg:w-3/4 px-4 md:px-8 lg:px-12 mt-4 lg:mt-7 flex flex-col space-y-8">
         {scenes.map((scene, sceneIndex) => (
-          <div key={scene.id} className="w-full  bg-white rounded-lg ">
-            <div className="w-full bg-pink-100 p-4 mb-6 rounded-md shadow-md">
+          <div key={scene.id} className="w-full bg-white rounded-lg">
+            {/* Scene Header */}
+            <div className="w-full bg-pink-100 p-3 md:p-4 mb-6 rounded-md shadow-md">
               <div className="flex items-center gap-2 justify-between mb-3">
-                <span className="text-2xl bg-gray-200 py-1 px-3 rounded-md">
+                <span className="text-xl md:text-2xl bg-gray-200 py-1 px-3 rounded-md">
                   {scene.id}
                 </span>
                 <input
                   type="text"
-                  className="w-full bg-transparent text-4xl font-semibold outline-none"
+                  className="w-full bg-transparent text-xl md:text-2xl lg:text-4xl font-semibold outline-none"
                   defaultValue={scene.title}
                 />
                 <div className="flex gap-2">
@@ -448,126 +452,65 @@ const WordEditor = () => {
 
               {/* Characters Section */}
               <div className="mb-4 mt-4 flex items-center gap-2 flex-wrap">
-                <span className="text-2xl font-medium">Characters:</span>
+                <span className="text-xl md:text-2xl font-medium">Characters:</span>
                 {scene.characters.map((char, charIndex) => (
                   <span
                     key={charIndex}
-                    className="text-2xl font-bold text-white bg-gray-400 px-2 py-1 rounded-full flex items-center gap-2"
+                    className="text-lg md:text-2xl font-bold text-white bg-gray-400 px-2 py-1 rounded-full flex items-center gap-2"
                   >
                     {char}
-                    <button  onClick={() => removeCharacter(sceneIndex, charIndex)} className="hover:text-red-500">×</button>
+                    <button onClick={() => removeCharacter(sceneIndex, charIndex)} className="hover:text-red-500">×</button>
                   </span>
                 ))}
-              
               </div>
             </div>
 
-            {/* Scene Content - Show only selected content */}
+            {/* Scene Content */}
             {scene.content.map((content, contentIndex) => (
-              <div key={contentIndex}>
-                {/* Render Description Textarea */}
+              <div key={contentIndex} className="mb-4">
+                {/* Description */}
                 {content.description !== undefined && (
-                <textarea
-                ref={(el) =>
-                  (inputRefs.current[
-                    `scene-${sceneIndex}-description-${contentIndex}`
-                  ] = el)
-                }
-                className="w-full p-4 text-2xl outline-none resize-none"
-                value={content.description}
-                placeholder="Type Your Content Here...................."
-                onChange={(e) =>
-                  handleContentChange(
-                    sceneIndex,
-                    contentIndex,
-                    "description",
-                    e.target.value
-                  )
-                }
-                onKeyDown={(e) => {
-                  if (e.key === "Tab") {
-                    handleKeyDown(e, sceneIndex, contentIndex);
-                  } else if (e.key === "Enter" && !e.shiftKey) {
-                    // Check if the textarea is not empty
-                    if (e.target.value.trim() !== "") {
-                      e.preventDefault(); // Prevent default behavior (new line)
-                      const cursorPosition = e.target.selectionStart;
-                      const currentValue = e.target.value;
-                      const newValue =
-                        currentValue.slice(0, cursorPosition) +
-                        "\n" +
-                        currentValue.slice(cursorPosition);
-                      handleContentChange(sceneIndex, contentIndex, "description", newValue);
-                      setTimeout(() => {
-                        e.target.selectionStart = e.target.selectionEnd = cursorPosition + 1;
-                      }, 0);
-                    } else {
-                      e.preventDefault(); // Prevent default behavior if the textarea is empty
-                    }
-                  }else if(e.key === "Backspace" && e.target.value === ""){
-                    handleKeyDown(e, sceneIndex, contentIndex);
-                  }
-                }}
-                onFocus={() => setSelectedButton("Description")}
-              />
+                  <textarea
+                    ref={(el) => (inputRefs.current[`scene-${sceneIndex}-description-${contentIndex}`] = el)}
+                    className="w-full p-3 md:p-4 text-xl md:text-2xl outline-none resize-none"
+                    value={content.description}
+                    placeholder="Type Your Content Here...................."
+                    onChange={(e) => handleContentChange(sceneIndex, contentIndex, "description", e.target.value)}
+                    onKeyDown={(e) => handleKeyDown(e, sceneIndex, contentIndex)}
+                    onFocus={() => setSelectedButton("Description")}
+                  />
                 )}
 
-                {/* Render Characters Input */}
+                {/* Characters Input */}
                 {content.characters !== undefined && (
                   <div className="w-full flex justify-center">
                     <input
-                      ref={(el) =>
-                        (inputRefs.current[
-                          `scene-${sceneIndex}-characters-${contentIndex}`
-                        ] = el)
-                      }
+                      ref={(el) => (inputRefs.current[`scene-${sceneIndex}-characters-${contentIndex}`] = el)}
                       type="text"
-                      className="w-1/2 text-3xl text-center p-2 outline-none"
+                      className="w-full md:w-1/2 text-xl md:text-3xl text-center p-2 outline-none"
                       placeholder="Type your characters..."
                       value={content.characters}
-                      onChange={(e) =>
-                        handleContentChange(
-                          sceneIndex,
-                          contentIndex,
-                          "characters",
-                          e.target.value
-                        )
-                      }
-                      onKeyDown={(e) =>
-                        handleKeyDown(e, sceneIndex, contentIndex)
-                      }
+                      onChange={(e) => handleContentChange(sceneIndex, contentIndex, "characters", e.target.value)}
+                      onKeyDown={(e) => handleKeyDown(e, sceneIndex, contentIndex)}
                       onFocus={() => setSelectedButton("Characters")}
                     />
                   </div>
                 )}
 
-                {/* Render Dialog Textarea */}
+                {/* Dialog */}
                 {content.dialog !== undefined && (
-                  <div className="w-full flex justify-center ">
+                  <div className="w-full flex justify-center">
                     <textarea
-                      ref={(el) =>
-                        (inputRefs.current[
-                          `scene-${sceneIndex}-dialog-${contentIndex}`
-                        ] = el)
-                      }
-                      className="w-3/5 text-2xl overflow-hidden p-2 outline-none resize-none"
+                      ref={(el) => (inputRefs.current[`scene-${sceneIndex}-dialog-${contentIndex}`] = el)}
+                      className="w-full md:w-3/5 text-xl md:text-2xl p-2 outline-none resize-none"
                       rows={2}
                       placeholder="Type your dialog..."
                       value={content.dialog}
-                      onChange={(e) =>
-                        handleContentChange(
-                          sceneIndex,
-                          contentIndex,
-                          "dialog",
-                          e.target.value
-                        )
-                      }
-                      onKeyDown={(e) =>
-                        handleKeyDown(e, sceneIndex, contentIndex)
-                      }
+                      onChange={(e) => handleContentChange(sceneIndex, contentIndex, "dialog", e.target.value)}
+                      onKeyDown={(e) => handleKeyDown(e, sceneIndex, contentIndex)}
                       onInput={(e) => {
-                        e.target.style.height = "auto"; // Reset height
-                        e.target.style.height = `${e.target.scrollHeight}px`; // Adjust height based on content
+                        e.target.style.height = "auto";
+                        e.target.style.height = `${e.target.scrollHeight}px`;
                       }}
                       onFocus={() => setSelectedButton("Dialog")}
                     />
@@ -577,17 +520,19 @@ const WordEditor = () => {
             ))}
           </div>
         ))}
-      <div className="mt-7 flex justify-center pb-8">
-      <button
-          className={`border text-xl font-bold border-black border-opacity-30 hover:bg-gray-300 rounded-lg px-4 py-2 bg-white text-black`}
-          onClick={handleAddScene}
-        >
-          Add Scene
-        </button>
-      </div>
-      </div>
+
+        {/* Add Scene Button */}
+        <div className="mt-7 flex justify-center pb-8">
+          <button
+            className="border text-lg md:text-xl font-bold border-black border-opacity-30 hover:bg-gray-300 rounded-lg px-4 py-2 bg-white text-black"
+            onClick={handleAddScene}
+          >
+            Add Scene
+          </button>
+        </div>
       </div>
     </div>
+  </div>
   );
 };
 
