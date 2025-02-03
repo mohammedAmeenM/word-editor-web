@@ -432,7 +432,7 @@ const WordEditor = () => {
                 </span>
                 <input
                   type="text"
-                  className="w-full bg-transparent text-xl md:text-2xl lg:text-4xl font-semibold outline-none"
+                  className="w-full bg-transparent text-xl md:text-xl lg:text-2xl xl:text-3xl 2xl:text-4xl font-semibold outline-none"
                   defaultValue={scene.title}
                 />
                 <div className="flex gap-2">
@@ -456,7 +456,7 @@ const WordEditor = () => {
                 {scene.characters.map((char, charIndex) => (
                   <span
                     key={charIndex}
-                    className="text-lg md:text-2xl font-bold text-white bg-gray-400 px-2 py-1 rounded-full flex items-center gap-2"
+                    className="text-lg md:text-xl lg:text-xl font-bold text-white bg-gray-400 px-2 py-2 rounded-full flex items-center gap-2"
                   >
                     {char}
                     <button onClick={() => removeCharacter(sceneIndex, charIndex)} className="hover:text-red-500">×</button>
