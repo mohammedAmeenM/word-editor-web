@@ -20,6 +20,7 @@ const WordEditor = () => {
           {
             id: 1,
             title: "EXT. SOMEWHERE - DAY",
+            name:"Enter Your Flim Name",
             characters: [],
             content: [
               {
@@ -36,6 +37,7 @@ const WordEditor = () => {
         {
           id: 1,
           title: "EXT. SOMEWHERE - DAY",
+          name:"Enter Your Flim Name",
           characters: [],
           content: [
             {
@@ -47,6 +49,9 @@ const WordEditor = () => {
       ];
     }
   };
+  const [title, setTitle] = useState(() => {
+    return localStorage.getItem("title") || "Enter Your Film Name";
+  });
   const [scenes, setScenes] = useState(getStoredScenes);
 
   useEffect(() => {
@@ -67,6 +72,7 @@ const WordEditor = () => {
   }, [scenes]);
   useEffect(() => {
     localStorage.setItem("scenes", JSON.stringify(scenes));
+
   }, [scenes]);
 
   const inputRefs = useRef({});
@@ -363,23 +369,42 @@ const WordEditor = () => {
     ));
   };
 
+  const handleTitleChange = (id, newTitle) => {
+    setScenes((prevScenes) => {
+      const updatedScenes = prevScenes.map((scene) =>
+        scene.id === id ? { ...scene, title: newTitle } : scene
+      );
+      
+      // Store the updated scenes in localStorage
+      localStorage.setItem("scenes", JSON.stringify(updatedScenes));
+  
+      return updatedScenes;
+    });
+  };
 
-
+  useEffect(() => {
+    localStorage.setItem("title", title);
+  }, [title]);
+  
+  const handleTitleChangee = (e) => {
+    setTitle(e.target.value);
+  };
   return (
     <div className="min-h-screen bg-gray-100">
     {/* Header - Responsive title input */}
     <div className="flex w-full justify-center p-4">
-      <input 
-        type="text" 
-        className="text-2xl md:text-3xl lg:text-4xl xl:text-4xl 2xl:text-5xl font-semibold bg-transparent outline-none w-full md:w-2/3 text-center border-b-4 border-black border-opacity-30 mb-6 py-2" 
-        defaultValue="Enter Your Film Name"
-      />
-    </div>
+  <input 
+    type="text" 
+    className="text-2xl md:text-3xl lg:text-4xl xl:text-4xl 2xl:text-5xl font-medium bg-transparent outline-none w-full md:w-2/3 text-center border-b-4 border-black border-opacity-30 mb-6 py-2" 
+    value={title}
+    onChange={handleTitleChangee}
+  />
+</div>;
 
     <div className="flex flex-col ">
       {/* Sidebar Controls - Responsive positioning */}
       <div className="w-full  flex justify-center sticky top-5  z-50 ">
-        <div className="flex justify-center w-full lg:w-4/5 xl:w-[52%] 2xl:w-[45%]  border border-opacity-30  py-7 px-9 gap-4 bg-gray-100 border-black rounded-xl">
+        <div className="flex justify-center w-[85%] lg:w-4/5 xl:w-[52%] 2xl:w-[45%]  border border-opacity-30  py-7 px-9 gap-4 bg-gray-100 border-black rounded-xl">
           {/* Scene Action Button */}
 
           <div className="flex flex-col w-1/3 2xl:w-1/3 space-y-4 ">
@@ -423,12 +448,13 @@ const WordEditor = () => {
             <div className="w-full bg-pink-100 p-3 md:p-4 mb-6 rounded-md shadow-md">
               <div className="flex items-center gap-2 justify-between mb-3">
                 <span className="text-xl md:text-2xl bg-gray-200 py-1 px-3 rounded-md">
-                  {scene.id}
+                  {sceneIndex+1}
                 </span>
                 <input
                   type="text"
                   className="w-full bg-transparent text-xl md:text-xl lg:text-2xl xl:text-3xl 2xl:text-3xl font-medium outline-none"
-                  defaultValue={scene.title}
+                  value={scene.title}
+                  onChange={(e) => handleTitleChange(scene.id, e.target.value)}
                 />
                 <div className="flex gap-2">
                   <button className="p-2 hover:bg-gray-200 rounded-full">
