@@ -378,8 +378,8 @@ const WordEditor = () => {
 
     <div className="flex flex-col ">
       {/* Sidebar Controls - Responsive positioning */}
-      <div className="w-full   ">
-        <div className="flex justify-center w-full  gap-4 bg-gray-100 border-black rounded-xl">
+      <div className="w-full  flex justify-center ">
+        <div className="flex justify-center w-full lg:w-4/5 2xl:w-3/4  gap-4 bg-gray-100 border-black rounded-xl">
           {/* Scene Action Button */}
 
           <div className="flex flex-col w-1/6 space-y-4 ">
