@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { FaChevronDown, FaChevronUp, FaTrash } from "react-icons/fa";
+import { MdOutlinePostAdd } from "react-icons/md";
 
 const WordEditor = () => {
   const getStoredScenes = () => {
@@ -375,53 +376,47 @@ const WordEditor = () => {
       />
     </div>
 
-    <div className="flex flex-col lg:flex-row">
+    <div className="flex flex-col ">
       {/* Sidebar Controls - Responsive positioning */}
-      <div className="w-full lg:w-1/4 p-4 lg:sticky lg:top-0 lg:h-screen">
-        <div className="flex flex-col p-4 border border-opacity-20 space-y-3 bg-gray-100 border-black rounded-xl">
+      <div className="w-full   ">
+        <div className="flex justify-center w-full  gap-4 bg-gray-100 border-black rounded-xl">
           {/* Scene Action Button */}
-          <div className={`border border-black border-opacity-30 rounded-lg px-4 py-2 ${
+
+          <div className="flex flex-col w-1/6 space-y-4 ">
+            <button className={`border border-black border-opacity-30 rounded-full px-4 py-2 ${
             selectedButton === "Description" 
               ? "bg-pink-100 text-black font-semibold" 
-              : "bg-white text-black font-medium"
-          }`}>
-            <p className="text-lg md:text-xl font-semibold p-1">Scene Action</p>
-            <hr className="border-black border-opacity-20" />
-            <div className="p-2">
-              <p className="text-base md:text-lg">Press Keyboard Shift+Tab</p>
-            </div>
+              : "bg-blue-200 text-black font-medium"
+          }`}>Action</button>
+            <p  className="text-center">Press Keyboard Shift+Tab</p>
+          </div>
+{/* Add Character Button */}
+          <div className="flex flex-col w-1/6  space-y-4 ">
+            <button className={`border border-black border-opacity-30 rounded-full px-4 py-2 ${
+            selectedButton === "Characters" 
+              ? "bg-pink-100 text-black font-semibold" 
+              : "bg-blue-200 text-black font-medium"
+          }`}>Character</button>
+            <p className="text-center">Press Keyboard Tab</p>
           </div>
 
-          {/* Add Character Button */}
-          <div className={`border border-black border-opacity-30 rounded-lg px-4 py-2 ${
-            selectedButton === "Characters"
-              ? "bg-pink-100 text-black font-semibold"
-              : "bg-white text-black font-medium"
-          }`}>
-            <p className="text-lg md:text-xl font-semibold p-1">Add Character</p>
-            <hr className="border-black border-opacity-20" />
-            <div className="p-2">
-              <p className="text-base md:text-lg">Press Keyboard Tab</p>
-            </div>
+                   {/* Add Dialog Button */}
+          <div className="flex flex-col w-1/6  space-y-4 ">
+            <button className={`border border-black border-opacity-30 rounded-full px-4 py-2 ${
+            selectedButton === "Dialog" 
+              ? "bg-pink-100 text-black font-semibold" 
+              : "bg-blue-200 text-black font-medium"
+          }`}>Dialog</button>
+            <p className="text-center">Type Character & Press Enter</p>
           </div>
 
-          {/* Add Dialog Button */}
-          <div className={`border border-black border-opacity-30 rounded-lg px-4 py-2 ${
-            selectedButton === "Dialog"
-              ? "bg-pink-100 text-black font-semibold"
-              : "bg-white text-black font-medium"
-          }`}>
-            <p className="text-lg md:text-xl font-semibold p-1">Add Dialog</p>
-            <hr className="border-black border-opacity-20" />
-            <div className="p-2">
-              <p className="text-base md:text-lg">Type Character & Press Enter</p>
-            </div>
-          </div>
+ 
+      
         </div>
       </div>
-
+<div className="w-full flex justify-center">
       {/* Main Content Area - Responsive width and padding */}
-      <div className="w-full lg:w-3/4 px-4 md:px-8 lg:px-12 mt-4 lg:mt-7 flex flex-col space-y-8">
+      <div className="w-full  lg:w-4/5  px-4 md:px-8 lg:px-6 mt-4 lg:mt-7 flex flex-col space-y-8">
         {scenes.map((scene, sceneIndex) => (
           <div key={scene.id} className="w-full bg-white rounded-lg">
             {/* Scene Header */}
@@ -432,7 +427,7 @@ const WordEditor = () => {
                 </span>
                 <input
                   type="text"
-                  className="w-full bg-transparent text-xl md:text-xl lg:text-2xl xl:text-3xl 2xl:text-4xl font-semibold outline-none"
+                  className="w-full bg-transparent text-xl md:text-xl lg:text-2xl xl:text-3xl 2xl:text-3xl font-medium outline-none"
                   defaultValue={scene.title}
                 />
                 <div className="flex gap-2">
@@ -452,11 +447,11 @@ const WordEditor = () => {
 
               {/* Characters Section */}
               <div className="mb-4 mt-4 flex items-center gap-2 flex-wrap">
-                <span className="text-xl md:text-2xl font-medium">Characters:</span>
+                <span className="text-xl md:text-xl font-medium">Characters:</span>
                 {scene.characters.map((char, charIndex) => (
                   <span
                     key={charIndex}
-                    className="text-lg md:text-xl lg:text-xl font-bold text-white bg-gray-400 px-2 py-2 rounded-full flex items-center gap-2"
+                    className="text-lg md:text-lg lg:text-lg font-medium text-white bg-gray-400 px-4 py-2 rounded-xl flex items-center gap-2"
                   >
                     {char}
                     <button onClick={() => removeCharacter(sceneIndex, charIndex)} className="hover:text-red-500">×</button>
@@ -522,15 +517,19 @@ const WordEditor = () => {
         ))}
 
         {/* Add Scene Button */}
-        <div className="mt-7 flex justify-center pb-8">
+        <div className="mt-4 flex justify-center pb-8">
           <button
-            className="border text-lg md:text-xl font-bold border-black border-opacity-30 hover:bg-gray-300 rounded-lg px-4 py-2 bg-white text-black"
+            className="border flex  justify-center items-center gap-1  text-lg md:text-lg font-bold border-black border-opacity-30 hover:bg-gray-300 rounded-lg px-4 py-1 bg-white text-black"
             onClick={handleAddScene}
           >
-            Add Scene
+            <span><MdOutlinePostAdd size={23}/></span>
+            <span className="font-semibold mt-[6px] text-lg">New Scene</span>
           </button>
         </div>
       </div>
+</div>
+
+
     </div>
   </div>
   );
