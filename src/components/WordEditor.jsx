@@ -8,50 +8,41 @@ const WordEditor = () => {
     if (storedScenes) {
       try {
         const parsedScenes = JSON.parse(storedScenes);
-        // Ensure each scene has a valid 'content' array
-        return parsedScenes.map((scene) => ({
+        // Ensure each scene has a valid 'content' array and update IDs
+        return parsedScenes.map((scene, index) => ({
           ...scene,
-          content: Array.isArray(scene.content) ? scene.content : [], // Fallback to empty array if content is invalid
+          id: index + 1, // Ensure IDs are sequential
+          content: Array.isArray(scene.content) ? scene.content : [],
         }));
       } catch (error) {
         console.error("Error parsing scenes from localStorage", error);
-        // Return default state if JSON parsing fails
-        return [
-          {
-            id: 1,
-            title: "EXT. SOMEWHERE - DAY",
-            name:"Enter Your Flim Name",
-            characters: [],
-            content: [
-              {
-                description: "", // Initially, only the description exists
-              },
-            ],
-            isExpanded: true,
-          },
-        ];
+        return getDefaultScene();
       }
     } else {
-      // Return default state if no scenes are stored in localStorage
-      return [
-        {
-          id: 1,
-          title: "EXT. SOMEWHERE - DAY",
-          name:"Enter Your Flim Name",
-          characters: [],
-          content: [
-            {
-              description: "", // Initially, only the description exists
-            },
-          ],
-          isExpanded: true,
-        },
-      ];
+      return getDefaultScene();
     }
   };
+  
+  // Helper function to get default scene
+  const getDefaultScene = () => [
+    {
+      id: 1,
+      title: "EXT. SOMEWHERE - DAY",
+      name: "Enter Your Film Name",
+      characters: [],
+      content: [
+        {
+          description: "",
+        },
+      ],
+      isExpanded: true,
+    },
+  ];
+  
   const [title, setTitle] = useState(() => {
     return localStorage.getItem("title") || "Enter Your Film Name";
   });
+  
   const [scenes, setScenes] = useState(getStoredScenes);
 
   useEffect(() => {
@@ -71,8 +62,12 @@ const WordEditor = () => {
     });
   }, [scenes]);
   useEffect(() => {
-    localStorage.setItem("scenes", JSON.stringify(scenes));
-
+    // Update scene IDs before saving to ensure they're sequential
+    const updatedScenes = scenes.map((scene, index) => ({
+      ...scene,
+      id: index + 1,
+    }));
+    localStorage.setItem("scenes", JSON.stringify(updatedScenes));
   }, [scenes]);
 
   const inputRefs = useRef({});
@@ -146,39 +141,44 @@ const WordEditor = () => {
   };
 
   const handleAddScene = () => {
-    const newScene = {
-      id: scenes.length + 1,
-      title: `EXT. NEW SCENE - DAY`,
-      characters: [],
-      content: [
-        {
-          description: "",
-        },
-      ],
-      isExpanded: true,
-    };
-
-    setScenes((prevScenes) => [...prevScenes, newScene]);
-
+    setScenes((prevScenes) => {
+      const newScene = {
+        id: prevScenes.length + 1,
+        title: `EXT. NEW SCENE - DAY`,
+        characters: [],
+        content: [
+          {
+            description: "",
+          },
+        ],
+        isExpanded: true,
+      };
+      return [...prevScenes, newScene];
+    });
+  
     // Focus the description textarea of the new scene after it's added
     setTimeout(() => {
       const newSceneIndex = scenes.length;
-      const newTextarea =
-        inputRefs.current[`scene-${newSceneIndex}-description-0`];
+      const newTextarea = inputRefs.current[`scene-${newSceneIndex}-description-0`];
       if (newTextarea) {
         newTextarea.focus();
       }
     }, 0);
   };
+  
 
-  const handleDeleteScene = (sceneId) => {
+  const handleDeleteScene = (sceneIndex) => {
     setScenes((prevScenes) => {
-      const updatedScenes = prevScenes.filter((scene) => scene.id !== sceneId);
-      localStorage.setItem("scenes", JSON.stringify(updatedScenes));
+      // Filter out the deleted scene and update IDs
+      const updatedScenes = prevScenes
+        .filter((_, index) => index !== sceneIndex)
+        .map((scene, index) => ({
+          ...scene,
+          id: index + 1, // Reassign IDs to maintain sequence
+        }));
       return updatedScenes;
     });
   };
-
   const handleKeyDown = (event, sceneIndex, contentIndex) => {
     const input = event.target;
     if (event.key === "Backspace" && input.value === "") {
@@ -389,6 +389,8 @@ const WordEditor = () => {
   const handleTitleChangee = (e) => {
     setTitle(e.target.value);
   };
+
+  console.log(scenes,'aaaaaaaaaaaaaaaaaaaaaaaaaaa')
   return (
     <div className="min-h-screen bg-gray-100">
     {/* Header - Responsive title input */}
@@ -442,13 +444,13 @@ const WordEditor = () => {
 <div className="w-full flex justify-center">
       {/* Main Content Area - Responsive width and padding */}
       <div className="w-full  lg:w-4/5  px-4 md:px-8 lg:px-6 mt-4 lg:mt-7 flex flex-col space-y-8">
-        {scenes.map((scene, sceneIndex) => (
+      {scenes.map((scene, sceneIndex) => (
           <div key={scene.id} className="w-full bg-white rounded-lg">
             {/* Scene Header */}
             <div className="w-full bg-pink-100 p-3 md:p-4 mb-6 rounded-md shadow-md">
               <div className="flex items-center gap-2 justify-between mb-3">
                 <span className="text-xl md:text-2xl bg-gray-200 py-1 px-3 rounded-md">
-                  {sceneIndex+1}
+                {sceneIndex + 1}
                 </span>
                 <input
                   type="text"
@@ -461,13 +463,13 @@ const WordEditor = () => {
                     {scene.isExpanded ? <FaChevronUp /> : <FaChevronDown />}
                   </button>
                   {scenes.length > 1 && (
-                    <button
-                      className="p-2 hover:bg-red-200 rounded-full text-red-500"
-                      onClick={() => handleDeleteScene(scene.id)}
-                    >
-                      <FaTrash />
-                    </button>
-                  )}
+                <button
+                  className="p-2 hover:bg-red-200 rounded-full text-red-500"
+                  onClick={() => handleDeleteScene(sceneIndex)}
+                >
+                  <FaTrash />
+                </button>
+              )}
                 </div>
               </div>
 
