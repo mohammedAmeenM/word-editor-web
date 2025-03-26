@@ -224,7 +224,6 @@ const Editor = () => {
     const input = event.target;
     const scene = scenes[sceneIndex];
     const updatedLines = [...scene.lines];
-  
     // Measure text width
     const canvas = document.createElement("canvas");
     const context = canvas.getContext("2d");
@@ -232,7 +231,6 @@ const Editor = () => {
     const font = `${computedStyle.fontSize} ${computedStyle.fontFamily}`;
     context.font = font;
     const textWidth = context.measureText(value).width;
-  
     // If the text width exceeds the input width
     if (textWidth > input.offsetWidth) {
       const lastSpaceIndex = value.lastIndexOf(" ");
