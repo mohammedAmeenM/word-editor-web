@@ -140,7 +140,7 @@ const WordEditor = () => {
       }
     }, 0);
   };
-  
+
 //handle add new scene -----------------------------------------------------------------------------
   const handleAddScene = () => {
     setScenes((prevScenes) => {
@@ -169,7 +169,7 @@ const WordEditor = () => {
     }, 0);
   };
   
-
+//handle delete scenes ------------------------------------------------------------------------
   const handleDeleteScene = (sceneIndex) => {
     setScenes((prevScenes) => {
       // Filter out the deleted scene and update IDs
