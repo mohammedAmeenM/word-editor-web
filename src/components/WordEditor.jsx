@@ -375,6 +375,7 @@ const WordEditor = () => {
     ));
   };
 
+  //handle titile content change -------------------------------------------
   const handleTitleChange = (id, newTitle) => {
     setScenes((prevScenes) => {
       const updatedScenes = prevScenes.map((scene) =>
