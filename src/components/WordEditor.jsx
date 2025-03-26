@@ -394,7 +394,6 @@ const WordEditor = () => {
       const updatedScenes = prevScenes.map((scene) =>
         scene.id === id ? { ...scene, sceneType: newSceneType } : scene
       );
-  
       localStorage.setItem("scenes", JSON.stringify(updatedScenes));
       return updatedScenes;
     });
@@ -405,11 +404,11 @@ const WordEditor = () => {
     localStorage.setItem("title", title);
   }, [title]);
   
+
   const handleTitleChangee = (e) => {
     setTitle(e.target.value);
   };
 
-  console.log(scenes,'aaaaaaaaaaaaaaaaaaaaaaaaaaa')
   return (
     <div className="min-h-screen bg-gray-100">
     {/* Header - Responsive title input */}
