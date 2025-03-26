@@ -5,10 +5,10 @@ const Editor = () => {
   const [scenes, setScenes] = useState([
     {
       id: 1,
-      title: "EXT. SOMEWHERE - DAY",
+      title: " SOMEWHERE - DAY",
       lines: ["Click here to type your scene content..."],
-      characters: [], // Changed to store characters per scene
-      isExpanded: true, // Add toggle state for each scene
+      characters: [], 
+      isExpanded: true,
     },
   ]);
   const [characters, setCharacters] = useState([]); // State to hold the character names
