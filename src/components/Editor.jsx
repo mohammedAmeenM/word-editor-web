@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import {  FaChevronDown, FaChevronUp, FaTrash } from "react-icons/fa";
+import { FaChevronDown, FaChevronUp, FaTrash } from "react-icons/fa";
 
 const Editor = () => {
   const [scenes, setScenes] = useState([
@@ -7,7 +7,7 @@ const Editor = () => {
       id: 1,
       title: " SOMEWHERE - DAY",
       lines: ["Click here to type your scene content..."],
-      characters: [], 
+      characters: [],
       isExpanded: true,
     },
   ]);
@@ -25,7 +25,7 @@ const Editor = () => {
   }, []);
 
   const addNewScene = () => {
-    setSelectedButton("Description")
+    setSelectedButton("Description");
     const newScene = {
       id: scenes.length + 1,
       title: "EXT. NEW SCENE - DAY",
@@ -41,25 +41,27 @@ const Editor = () => {
       const updatedScenes = scenes.filter((_, index) => index !== sceneIndex);
       const reorderedScenes = updatedScenes.map((scene, index) => ({
         ...scene,
-        id: index + 1
+        id: index + 1,
       }));
       setScenes(reorderedScenes);
     }
   };
 
   const toggleSceneExpansion = (sceneIndex) => {
-    setScenes(scenes.map((scene, index) => 
-      index === sceneIndex 
-        ? { ...scene, isExpanded: !scene.isExpanded }
-        : scene
-    ));
+    setScenes(
+      scenes.map((scene, index) =>
+        index === sceneIndex
+          ? { ...scene, isExpanded: !scene.isExpanded }
+          : scene
+      )
+    );
   };
 
   const addCharacter = (sceneIndex, text) => {
     if (text.trim()) {
-      setScenes(prevScenes => 
-        prevScenes.map((scene, index) => 
-          index === sceneIndex 
+      setScenes((prevScenes) =>
+        prevScenes.map((scene, index) =>
+          index === sceneIndex
             ? { ...scene, characters: [...scene.characters, text.trim()] }
             : scene
         )
@@ -68,22 +70,25 @@ const Editor = () => {
   };
 
   const removeCharacter = (sceneIndex, charIndex) => {
-    setScenes(scenes.map((scene, index) => 
-      index === sceneIndex 
-        ? { 
-            ...scene, 
-            characters: scene.characters.filter((_, i) => i !== charIndex)
-          }
-        : scene
-    ));
+    setScenes(
+      scenes.map((scene, index) =>
+        index === sceneIndex
+          ? {
+              ...scene,
+              characters: scene.characters.filter((_, i) => i !== charIndex),
+            }
+          : scene
+      )
+    );
   };
 
   const handleButtonClick = (buttonName) => {
     setSelectedButton(buttonName);
-    
+
     const firstSceneIndex = 0;
     const lastLineIndex = scenes[firstSceneIndex].lines.length - 1;
-    const lastInput = inputRefs.current[`scene-${firstSceneIndex}-line-${lastLineIndex}`];
+    const lastInput =
+      inputRefs.current[`scene-${firstSceneIndex}-line-${lastLineIndex}`];
 
     if (lastInput) {
       switch (buttonName) {
@@ -114,19 +119,23 @@ const Editor = () => {
       if (selectedButton === "Characters" && input.value.trim()) {
         addCharacter(sceneIndex, input.value);
         input.value = "";
-  
+
         setSelectedButton("Dailog");
-  
-        setScenes(prevScenes => {
+
+        setScenes((prevScenes) => {
           const updatedScenes = [...prevScenes];
           const updatedLines = [...updatedScenes[sceneIndex].lines];
           updatedLines.splice(lineIndex + 1, 0, "");
-          updatedScenes[sceneIndex] = { ...updatedScenes[sceneIndex], lines: updatedLines };
+          updatedScenes[sceneIndex] = {
+            ...updatedScenes[sceneIndex],
+            lines: updatedLines,
+          };
           return updatedScenes;
         });
-  
+
         setTimeout(() => {
-          const nextInput = inputRefs.current[`scene-${sceneIndex}-line-${lineIndex + 1}`];
+          const nextInput =
+            inputRefs.current[`scene-${sceneIndex}-line-${lineIndex + 1}`];
           if (nextInput) {
             nextInput.focus();
             nextInput.style.textAlign = "left";
@@ -137,14 +146,15 @@ const Editor = () => {
       }
       if (selectedButton === "Dailog" && input.value.trim()) {
         setSelectedButton("Characters");
-        
+
         // Create new line and set dialog formatting
         const updatedLines = [...scene.lines];
         updatedLines.splice(lineIndex + 1, 0, "");
         updateSceneLines(sceneIndex, updatedLines);
 
         setTimeout(() => {
-          const nextInput = inputRefs.current[`scene-${sceneIndex}-line-${lineIndex + 1}`];
+          const nextInput =
+            inputRefs.current[`scene-${sceneIndex}-line-${lineIndex + 1}`];
           if (nextInput) {
             nextInput.focus();
             nextInput.style.textAlign = "center";
@@ -165,7 +175,8 @@ const Editor = () => {
       updateSceneLines(sceneIndex, updatedLines);
 
       setTimeout(() => {
-        const nextInput = inputRefs.current[`scene-${sceneIndex}-line-${lineIndex + 1}`];
+        const nextInput =
+          inputRefs.current[`scene-${sceneIndex}-line-${lineIndex + 1}`];
         if (nextInput) {
           nextInput.focus();
           nextInput.style.textAlign = input.style.textAlign;
@@ -179,7 +190,7 @@ const Editor = () => {
         input.style.textAlign = "center";
         input.style.paddingLeft = "0%";
       }
-    }else if (event.key === "Backspace" && scene.lines[lineIndex] === "") {
+    } else if (event.key === "Backspace" && scene.lines[lineIndex] === "") {
       event.preventDefault();
       if (lineIndex > 0) {
         const updatedLines = [...scene.lines];
@@ -212,8 +223,7 @@ const Editor = () => {
           inputRefs.current[`scene-${sceneIndex}-line-${lineIndex + 1}`];
         lowerInput && lowerInput.focus();
       } else if (sceneIndex < scenes.length - 1) {
-        const nextInput =
-          inputRefs.current[`scene-${sceneIndex + 1}-line-0`];
+        const nextInput = inputRefs.current[`scene-${sceneIndex + 1}-line-0`];
         nextInput && nextInput.focus();
       }
     }
@@ -234,12 +244,12 @@ const Editor = () => {
     // If the text width exceeds the input width
     if (textWidth > input.offsetWidth) {
       const lastSpaceIndex = value.lastIndexOf(" ");
-  
+
       if (lastSpaceIndex !== -1) {
         // Split at the last space
         const currentLine = value.substring(0, lastSpaceIndex);
         const newLine = value.substring(lastSpaceIndex + 1);
-  
+
         updatedLines[lineIndex] = currentLine;
         updatedLines.splice(lineIndex + 1, 0, newLine);
       } else {
@@ -247,9 +257,9 @@ const Editor = () => {
         updatedLines[lineIndex] = value;
         updatedLines.splice(lineIndex + 1, 0, "");
       }
-  
+
       updateSceneLines(sceneIndex, updatedLines);
-  
+
       setTimeout(() => {
         const nextInput =
           inputRefs.current[`scene-${sceneIndex}-line-${lineIndex + 1}`];
@@ -286,63 +296,63 @@ const Editor = () => {
 
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col items-center ">
-   {/* buttoonssss */}
-   <div className="w-full flex justify-center pt-5 gap-3 mb-4 px-6">
-    <button
-      className={`border border-black rounded-lg px-4 py-2 ${
-        selectedButton === "Add Scene"
-          ? "bg-black text-white"
-          : "bg-white text-black"
-      }`}
-      onClick={() => {
-        addNewScene();
-      }}
-    >
-      Add Scene
-    </button>
-    <button
-  className={`border border-black rounded-lg px-4 py-2 ${
-    selectedButton === "Description"
-      ? "bg-black text-white"
-      : "bg-white text-black"
-  }`}
-  onClick={() => handleButtonClick("Description")}
->
-  Description
-</button>
-    <button
-      className={`border border-black rounded-lg px-4 py-2 ${
-        selectedButton === "Characters"
-          ? "bg-black text-white"
-          : "bg-white text-black"
-      }`}
-      onClick={() => handleButtonClick("Characters")}
-    >
-      Characters
-    </button>
-    <button
-      className={`border border-black rounded-lg px-4 py-2 ${
-        selectedButton === "Dailog"
-          ? "bg-black text-white"
-          : "bg-white text-black"
-      }`}
-      onClick={() => handleButtonClick("Dailog")}
-    >
-      Dailogs
-    </button>
-    <button
-      className={`border border-black rounded-lg px-4 py-2 ${
-        selectedButton === "Code"
-          ? "bg-black text-white"
-          : "bg-white text-black"
-      }`}
-      onClick={() => handleButtonClick("Code")}
-    >
-      Code
-    </button>
-  </div>
+      {/* buttoonssss */}
+      <div className="w-full flex justify-center pt-5 gap-3 mb-4 px-6">
+        <button
+          className={`border border-black rounded-lg px-4 py-2 ${
+            selectedButton === "Add Scene"
+              ? "bg-black text-white"
+              : "bg-white text-black"
+          }`}
+          onClick={() => {
+            addNewScene();
+          }}
+        >
+          Add Scene
+        </button>
+        <button
+          className={`border border-black rounded-lg px-4 py-2 ${
+            selectedButton === "Description"
+              ? "bg-black text-white"
+              : "bg-white text-black"
+          }`}
+          onClick={() => handleButtonClick("Description")}
+        >
+          Description
+        </button>
+        <button
+          className={`border border-black rounded-lg px-4 py-2 ${
+            selectedButton === "Characters"
+              ? "bg-black text-white"
+              : "bg-white text-black"
+          }`}
+          onClick={() => handleButtonClick("Characters")}
+        >
+          Characters
+        </button>
+        <button
+          className={`border border-black rounded-lg px-4 py-2 ${
+            selectedButton === "Dailog"
+              ? "bg-black text-white"
+              : "bg-white text-black"
+          }`}
+          onClick={() => handleButtonClick("Dailog")}
+        >
+          Dailogs
+        </button>
+        <button
+          className={`border border-black rounded-lg px-4 py-2 ${
+            selectedButton === "Code"
+              ? "bg-black text-white"
+              : "bg-white text-black"
+          }`}
+          onClick={() => handleButtonClick("Code")}
+        >
+          Code
+        </button>
+      </div>
 
-  <div className="w-full flex justify-center flex-col items-center space-y-8">
+      <div className="w-full flex justify-center flex-col items-center space-y-8">
         {scenes.map((scene, sceneIndex) => (
           <div key={scene.id} className="w-11/12 bg-white rounded-lg lg:w-2/3">
             <div className="w-full bg-pink-100 p-4 mb-6 rounded-md shadow-md">
@@ -356,14 +366,14 @@ const Editor = () => {
                   defaultValue={scene.title}
                 />
                 <div className="flex gap-2">
-                  <button 
+                  <button
                     onClick={() => toggleSceneExpansion(sceneIndex)}
                     className="p-2 hover:bg-gray-200 rounded-full"
                   >
                     {scene.isExpanded ? <FaChevronUp /> : <FaChevronDown />}
                   </button>
                   {scenes.length > 1 && (
-                    <button 
+                    <button
                       onClick={() => deleteScene(sceneIndex)}
                       className="p-2 hover:bg-red-200 rounded-full text-red-500"
                     >
@@ -372,7 +382,7 @@ const Editor = () => {
                   )}
                 </div>
               </div>
-              
+
               {/* Characters section */}
               <div className="mb-3 flex items-center gap-2 flex-wrap">
                 <span className="text-xl font-medium">Characters:</span>
@@ -382,7 +392,7 @@ const Editor = () => {
                     className="text-xl font-bold text-white bg-gray-400 px-2 py-1 rounded-full flex items-center gap-2"
                   >
                     {char}
-                    <button 
+                    <button
                       onClick={() => removeCharacter(sceneIndex, charIndex)}
                       className="hover:text-red-500"
                     >
@@ -390,7 +400,7 @@ const Editor = () => {
                     </button>
                   </span>
                 ))}
-                <button 
+                <button
                   onClick={() => addCharacter(sceneIndex)}
                   className="inline-flex items-center text-xl font-bold justify-center text-white px-1.5 border border-black bg-gray-400 rounded shadow hover:bg-pink-500 hover:text-white"
                 >
@@ -407,8 +417,9 @@ const Editor = () => {
                     key={lineIndex}
                     id={`scene-${sceneIndex}-line-${lineIndex}`}
                     ref={(el) =>
-                      (inputRefs.current[`scene-${sceneIndex}-line-${lineIndex}`] =
-                        el)
+                      (inputRefs.current[
+                        `scene-${sceneIndex}-line-${lineIndex}`
+                      ] = el)
                     }
                     type="text"
                     value={line}
