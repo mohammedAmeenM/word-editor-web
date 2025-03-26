@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { FaBars, FaChevronDown, FaChevronUp, FaTrash } from "react-icons/fa";
+import {  FaChevronDown, FaChevronUp, FaTrash } from "react-icons/fa";
 
 const Editor = () => {
   const [scenes, setScenes] = useState([
