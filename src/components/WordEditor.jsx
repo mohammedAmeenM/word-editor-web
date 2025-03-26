@@ -140,7 +140,8 @@ const WordEditor = () => {
       }
     }, 0);
   };
-
+  
+//handle add new scene -----------------------------------------------------------------------------
   const handleAddScene = () => {
     setScenes((prevScenes) => {
       const newScene = {
