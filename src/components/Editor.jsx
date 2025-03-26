@@ -11,7 +11,7 @@ const Editor = () => {
       isExpanded: true,
     },
   ]);
-  const [characters, setCharacters] = useState([]); // State to hold the character names
+
   const inputRefs = useRef({});
 
   const [selectedButton, setSelectedButton] = useState("Description"); // Set initial selection
