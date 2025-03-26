@@ -104,8 +104,6 @@ const Editor = () => {
     }
   };
 
- 
-
   const handleKeyDown = (event, sceneIndex, lineIndex) => {
     const scene = scenes[sceneIndex];
     const input = event.target;
@@ -115,8 +113,6 @@ const Editor = () => {
 
       if (selectedButton === "Characters" && input.value.trim()) {
         addCharacter(sceneIndex, input.value);
-  
-        // Reset input after adding character
         input.value = "";
   
         setSelectedButton("Dailog");
