@@ -110,6 +110,8 @@ const WordEditor = () => {
       })
     );
   };
+
+  //onchange update contents-------------------------------------------------------------
   const handleContentChange = (sceneIndex, contentIndex, field, value) => {
     setScenes((prevScenes) =>
       prevScenes.map((scene, index) =>
