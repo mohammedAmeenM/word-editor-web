@@ -136,8 +136,6 @@ const Editor = () => {
         return;
       }
       if (selectedButton === "Dailog" && input.value.trim()) {
-        // Add character and switch to Dialog mode
-       
         setSelectedButton("Characters");
         
         // Create new line and set dialog formatting
