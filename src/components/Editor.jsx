@@ -153,7 +153,6 @@ const Editor = () => {
         }, 0);
         return;
       }
-
       // Normal Enter behavior
       const updatedLines = [...scene.lines];
       const currentLine = updatedLines[lineIndex];
@@ -169,7 +168,6 @@ const Editor = () => {
         const nextInput = inputRefs.current[`scene-${sceneIndex}-line-${lineIndex + 1}`];
         if (nextInput) {
           nextInput.focus();
-          // Maintain current formatting
           nextInput.style.textAlign = input.style.textAlign;
           nextInput.style.paddingLeft = input.style.paddingLeft;
         }
