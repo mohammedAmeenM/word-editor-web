@@ -1,6 +1,6 @@
 
 import './App.css'
-import Editor from './components/Editor'
+
 import { Route, Routes } from 'react-router-dom'
 import WordEditor from './components/WordEditor'
 
