@@ -8,11 +8,11 @@ const WordEditor = () => {
     if (storedScenes) {
       try {
         const parsedScenes = JSON.parse(storedScenes);
-        // Ensure each scene has a valid 'content' array and update IDs
         return parsedScenes.map((scene, index) => ({
           ...scene,
-          id: index + 1, // Ensure IDs are sequential
+          id: index + 1,
           content: Array.isArray(scene.content) ? scene.content : [],
+          sceneType: scene.sceneType || "DAY/EXT", // Default to "DAY/EXT" if missing
         }));
       } catch (error) {
         console.error("Error parsing scenes from localStorage", error);
@@ -23,11 +23,10 @@ const WordEditor = () => {
     }
   };
   
-  // Helper function to get default scene
   const getDefaultScene = () => [
     {
       id: 1,
-      title: "EXT. SOMEWHERE - DAY",
+      title: "SOMEWHERE ",
       name: "Enter Your Film Name",
       characters: [],
       content: [
@@ -36,6 +35,7 @@ const WordEditor = () => {
         },
       ],
       isExpanded: true,
+      sceneType: "DAY/EXT",
     },
   ];
   
@@ -144,7 +144,7 @@ const WordEditor = () => {
     setScenes((prevScenes) => {
       const newScene = {
         id: prevScenes.length + 1,
-        title: `EXT. NEW SCENE - DAY`,
+        title: `NEW SCENE `,
         characters: [],
         content: [
           {
@@ -152,6 +152,7 @@ const WordEditor = () => {
           },
         ],
         isExpanded: true,
+        sceneType: "DAY/EXT",
       };
       return [...prevScenes, newScene];
     });
@@ -382,6 +383,18 @@ const WordEditor = () => {
     });
   };
 
+  const handleSceneTypeChange = (id, newSceneType) => {
+    setScenes((prevScenes) => {
+      const updatedScenes = prevScenes.map((scene) =>
+        scene.id === id ? { ...scene, sceneType: newSceneType } : scene
+      );
+  
+      localStorage.setItem("scenes", JSON.stringify(updatedScenes));
+      return updatedScenes;
+    });
+  };
+  
+
   useEffect(() => {
     localStorage.setItem("title", title);
   }, [title]);
@@ -452,6 +465,19 @@ const WordEditor = () => {
                 <span className="text-xl md:text-2xl bg-gray-200 py-1 px-3 rounded-md">
                 {sceneIndex + 1}
                 </span>
+                <select
+                  name="sceneType"
+                  id="sceneType"
+                  className="bg-transparent border-none text-xl md:text-xl lg:text-xl xl:text-xl mt-2 2xl:text-2xl font-medium outline-none focus:ring-0"
+                  value={scene.sceneType} // Set the selected value
+                  onChange={(e) => handleSceneTypeChange(scene.id, e.target.value)}
+                >
+                  <option value="DAY/EXT">DAY/EXT</option>
+                  <option value="NIGHT/EXT">NIGHT/EXT</option>
+                  <option value="DAY/INT">DAY/INT</option>
+                  <option value="NIGHT/INT">NIGHT/INT</option>
+                </select>
+
                 <input
                   type="text"
                   className="w-full bg-transparent text-xl md:text-xl lg:text-2xl xl:text-3xl 2xl:text-3xl font-medium outline-none"

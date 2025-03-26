@@ -10,7 +10,7 @@ function App() {
   return (
     <>
     <Routes>
-      <Route path='/word' element={<Editor />} />
+
       <Route path='/' element={<WordEditor />} />
     </Routes>
 
