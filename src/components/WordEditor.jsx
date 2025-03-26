@@ -363,6 +363,7 @@ const WordEditor = () => {
     }
   };
 
+  //Remove charecters Array list -----------------------------------------------------------
   const removeCharacter = (sceneIndex, charIndex) => {
     setScenes(scenes.map((scene, index) => 
       index === sceneIndex 
