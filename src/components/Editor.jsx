@@ -262,27 +262,27 @@ const Editor = () => {
     }
   };
 
-  const addNewLine = (sceneIndex, lineIndex) => {
-    const scene = scenes[sceneIndex];
-    const updatedLines = [...scene.lines];
-    updatedLines.splice(lineIndex + 1, 0, "");
-    updateSceneLines(sceneIndex, updatedLines);
+  // const addNewLine = (sceneIndex, lineIndex) => {
+  //   const scene = scenes[sceneIndex];
+  //   const updatedLines = [...scene.lines];
+  //   updatedLines.splice(lineIndex + 1, 0, "");
+  //   updateSceneLines(sceneIndex, updatedLines);
 
-    setTimeout(() => {
-      const nextInput =
-        inputRefs.current[`scene-${sceneIndex}-line-${lineIndex + 1}`];
-      nextInput && nextInput.focus();
-    }, 0);
-  };
+  //   setTimeout(() => {
+  //     const nextInput =
+  //       inputRefs.current[`scene-${sceneIndex}-line-${lineIndex + 1}`];
+  //     nextInput && nextInput.focus();
+  //   }, 0);
+  // };
 
-  const updateSceneLines = (sceneIndex, updatedLines) => {
-    const updatedScenes = [...scenes];
-    updatedScenes[sceneIndex] = {
-      ...updatedScenes[sceneIndex],
-      lines: updatedLines,
-    };
-    setScenes(updatedScenes);
-  };
+  // const updateSceneLines = (sceneIndex, updatedLines) => {
+  //   const updatedScenes = [...scenes];
+  //   updatedScenes[sceneIndex] = {
+  //     ...updatedScenes[sceneIndex],
+  //     lines: updatedLines,
+  //   };
+  //   setScenes(updatedScenes);
+  // };
 
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col items-center ">
