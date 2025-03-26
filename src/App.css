@@ -29,7 +29,7 @@
 }
 
 button.save-btn {
-  background-color: #4CAF50;
+  background-color: #4caf50;
   color: white;
   padding: 10px 20px;
   border: none;
@@ -40,7 +40,6 @@ button.save-btn {
 button.save-btn:hover {
   background-color: #45a049;
 }
-
 
 .inputbox {
   width: 100%; /* Full width of its container */
