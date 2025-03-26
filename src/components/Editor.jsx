@@ -12,7 +12,6 @@ const Editor = () => {
     },
   ]);
   const inputRefs = useRef({});
-
   const [selectedButton, setSelectedButton] = useState("Description");
 
   // Auto-select Description button and focus on first line when component mounts
@@ -31,7 +30,7 @@ const Editor = () => {
       id: scenes.length + 1,
       title: "EXT. NEW SCENE - DAY",
       lines: ["Click here to type your scene content..."],
-      characters: [], // Initialize empty characters array for new scene
+      characters: [],
       isExpanded: true,
     };
     setScenes([...scenes, newScene]);
