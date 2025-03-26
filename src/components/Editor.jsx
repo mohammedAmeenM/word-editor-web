@@ -117,7 +117,6 @@ const Editor = () => {
   
         setSelectedButton("Dailog");
   
-        // Add a new line after the character name
         setScenes(prevScenes => {
           const updatedScenes = [...prevScenes];
           const updatedLines = [...updatedScenes[sceneIndex].lines];
