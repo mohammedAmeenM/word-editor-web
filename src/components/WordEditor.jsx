@@ -73,8 +73,7 @@ const WordEditor = () => {
   const inputRefs = useRef({});
   const [selectedButton, setSelectedButton] = useState("Description");
 
-
-
+//handle click button-------------------------------------------------------------------
   const handleButtonClick = (buttonName) => {
     setSelectedButton(buttonName);
   
