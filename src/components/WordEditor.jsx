@@ -182,6 +182,8 @@ const WordEditor = () => {
       return updatedScenes;
     });
   };
+
+  //handle press keyboard key words -------------------------------------------------
   const handleKeyDown = (event, sceneIndex, contentIndex) => {
     const input = event.target;
     if (event.key === "Backspace" && input.value === "") {
