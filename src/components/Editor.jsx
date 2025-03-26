@@ -11,10 +11,9 @@ const Editor = () => {
       isExpanded: true,
     },
   ]);
-
   const inputRefs = useRef({});
 
-  const [selectedButton, setSelectedButton] = useState("Description"); // Set initial selection
+  const [selectedButton, setSelectedButton] = useState("Description");
 
   // Auto-select Description button and focus on first line when component mounts
   useEffect(() => {
