@@ -37,9 +37,8 @@ const Editor = () => {
   };
 
   const deleteScene = (sceneIndex) => {
-    if (scenes.length > 1) { // Prevent deleting the last scene
+    if (scenes.length > 1) {
       const updatedScenes = scenes.filter((_, index) => index !== sceneIndex);
-      // Update IDs to maintain sequence
       const reorderedScenes = updatedScenes.map((scene, index) => ({
         ...scene,
         id: index + 1
